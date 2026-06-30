@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 
-import type { AdminLogin } from '../types/admin';
+import type { Admin } from '../types/admin';
 
 export const useAdminStore = defineStore('admin', {
   state: () => {
@@ -25,7 +25,7 @@ export const useAdminStore = defineStore('admin', {
     updateIslogin(val: number) {
       this.islogin = val;
     },
-    updateLoginAdmin(val: AdminLogin) {
+    updateLoginAdmin(val: Admin) {
       this.loginAdmin = val;
     }
   },

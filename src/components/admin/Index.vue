@@ -14,10 +14,8 @@ const admin = useAdminStore().getLoginAdmin;
       <el-col :span="5">
         <el-card style="width: 100%; height: 200px; min-width: 250px">
           <template #header>
-            <div class="card-header" style="display: flex; justify-content: space-between; align-items: center">
-              <el-image style="width: 60px; height: 60px" :src="'/api/' + admin.avatar" />
-              <span>{{ admin.username }}</span>
-            </div>
+            <el-image style="width: 60px; height: 60px" :src="'/api/' + admin.avatar" />
+            <span>{{ admin.username }}</span>
           </template>
           <p>登录时间：2026-10-10 15:36:12</p>
           <p>登录地点：广西南宁</p>

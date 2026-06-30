@@ -1,4 +1,128 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { onBeforeMount, reactive, ref } from 'vue';
+
+import { ElMessage, type FormInstance, type UploadData, type UploadFile, type UploadProps } from 'element-plus';
+
+import { adminApi } from '../../api/admin';
+import type { Goods } from '../../types/admin';
+
+const ruleFormRef = ref<FormInstance>();
+const dialogFormVisible = ref(false);
+const tableData = ref<Goods[]>([]);
+const id = ref(0);
+
+const goods = ref<Goods>({
+  id: 0,
+  category_id: 0,
+  name: '',
+  price: 0,
+  picture: '',
+  stock: 0,
+  spec: '',
+  description: '',
+  is_hot: 0,
+  is_recomented: 0
+});
+
+const rules = reactive({
+  name: [
+    { required: true, message: '请填写商品名称', trigger: 'blur' },
+    { min: 3, max: 80, message: '商品标题长度必须3-80位', trigger: 'blur' }
+  ],
+  category_id: [{ required: true, message: '请选择商品分类', trigger: 'change' }],
+  stock: [{ required: true, message: '填写库存必须是数字', trigger: 'blur' }],
+  price: [{ required: true, message: '请填写价格必须是数字', trigger: 'blur' }],
+  description: [{ required: true, message: '请填写商品简介', trigger: 'blur' }],
+  spec: [{ required: true, message: '填写规则', trigger: 'blur' }]
+});
+
+onBeforeMount(async () => {
+  const res = await adminApi.goodsList();
+  tableData.value = res;
+});
+
+const openDialog = async (ids?: number) => {
+  dialogFormVisible.value = true;
+  if (ids && ids > 0) {
+    id.value = ids;
+    const res = await adminApi.goods(ids);
+    goods.value = res;
+    imageUrl.value = '/api/' + res.picture;
+  }
+};
+
+const submitForm = async (formEl: FormInstance | undefined) => {
+  if (!formEl) return;
+  try {
+    await formEl.validate();
+    if (id.value > 0) {
+      adminApi.goodsUpdate({
+        id: goods.value.id,
+        name: goods.value.name,
+        category_id: goods.value.category_id,
+        price: goods.value.price,
+        picture: goods.value.picture,
+        stock: goods.value.stock,
+        spec: goods.value.spec,
+        description: goods.value.description,
+        is_hot: goods.value.is_hot,
+        is_recomented: goods.value.is_recomented
+      });
+    } else {
+      adminApi.goodsAdd({
+        name: goods.value.name,
+        category_id: goods.value.category_id,
+        price: goods.value.price,
+        picture: goods.value.picture,
+        stock: goods.value.stock,
+        spec: goods.value.spec,
+        description: goods.value.description,
+        is_hot: goods.value.is_hot,
+        is_recomented: goods.value.is_recomented
+      });
+    }
+  } catch (error) {
+    console.error('表单校验失败或请求出错:', error);
+  }
+};
+
+const deleteGoods = async (ids: number) => {
+  adminApi.goodsDelete(ids);
+};
+
+const resetForm = () => {
+  dialogFormVisible.value = false;
+  goods.value = {
+    id: 0,
+    category_id: 0,
+    name: '',
+    price: 0,
+    picture: '',
+    stock: 0,
+    spec: '',
+    description: '',
+    is_hot: 0,
+    is_recomented: 0
+  };
+  imageUrl.value = '';
+};
+
+// 图片上传
+const imageUrl = ref('');
+const handleAvatarSuccess: UploadData['onSuccess'] = (_response: { data: { url: string } }, uploadFile: UploadFile) => {
+  imageUrl.value = URL.createObjectURL(uploadFile.raw!);
+};
+const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
+  if (rawFile.type !== 'image/jpeg') {
+    ElMessage.error('Avatar picture must be JPG format!');
+    return false;
+  } else if (rawFile.size / 1024 / 1024 > 2) {
+    ElMessage.error('Avatar picture size can not exceed 2MB!');
+    return false;
+  }
+  return true;
+};
+</script>
 
 <template>
   <div>
@@ -18,7 +142,7 @@
         <el-table-column prop="description" label="商品简介" />
         <el-table-column fixed="right" label="商品图片" min-width="120">
           <template #default="scope">
-            <img :src="'/img/' + scope.row.picture" height="100px" />
+            <img :src="'/api/' + scope.row.picture" height="100px" />
           </template>
         </el-table-column>
         <el-table-column fixed="right" label="操作" min-width="120">
@@ -48,7 +172,7 @@
       <el-form-item label="商品主图" prop="picture">
         <el-upload class="avatar-uploader" action="/api/admin/goods/upload" :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
           <img v-if="imageUrl" :src="imageUrl" class="avatar" />
-          <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
+          <el-icon v-else class="avatar-uploader-icon"><i-ep-plus /></el-icon>
         </el-upload>
       </el-form-item>
 
@@ -66,7 +190,7 @@
 
       <el-form-item>
         <el-button type="primary" @click="submitForm(ruleFormRef)"> 确认 </el-button>
-        <el-button @click="resetForm(ruleFormRef)">取消</el-button>
+        <el-button @click="resetForm()">取消</el-button>
       </el-form-item>
     </el-form>
   </el-dialog>

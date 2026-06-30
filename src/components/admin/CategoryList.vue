@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onBeforeMount, reactive, ref } from 'vue';
 
-import { ElMessage, type FormInstance, type UploadFile, type UploadRawFile } from 'element-plus';
+import { ElMessage, type FormInstance, type UploadData, type UploadFile, type UploadProps } from 'element-plus';
 
 import { adminApi } from '../../api/admin';
 import type { Category } from '../../types/admin';
@@ -9,7 +9,6 @@ import type { Category } from '../../types/admin';
 const ruleFormRef = ref<FormInstance>();
 const dialogFormVisible = ref(false);
 const tableData = ref<Category[]>([]);
-const imageUrl = ref('');
 const id = ref(0);
 
 const category = ref<Category>({
@@ -26,8 +25,7 @@ const rules = reactive({
 });
 
 onBeforeMount(async () => {
-  const res = await adminApi.categoryList();
-  tableData.value = res;
+  tableData.value = await adminApi.categoryList();
 });
 
 const openDialog = async (ids?: number) => {
@@ -48,14 +46,18 @@ const submitForm = async (formEl: FormInstance | undefined) => {
       adminApi.categoryUpdate({
         id: category.value.id,
         name: category.value.name,
-        image: category.value.picture
+        picture: category.value.picture
       });
     } else {
       adminApi.categoryAdd({
         name: category.value.name,
-        image: category.value.picture
+        picture: category.value.picture
       });
     }
+    tableData.value = await adminApi.categoryList();
+    dialogFormVisible.value = false;
+    category.value = { id: 0, name: '', picture: '' };
+    imageUrl.value = '';
   } catch (error) {
     console.error('表单校验失败或请求出错:', error);
   }
@@ -76,16 +78,15 @@ const resetForm = () => {
 };
 
 // 图片上传
-const handleAvatarSuccess = (response: { data: { url: string } }, uploadFile: UploadFile) => {
-  category.value.picture = response.data.url;
+const imageUrl = ref('');
+const handleAvatarSuccess: UploadData['onSuccess'] = (_response: { data: { url: string } }, uploadFile: UploadFile) => {
   imageUrl.value = URL.createObjectURL(uploadFile.raw!);
 };
-
-const beforeAvatarUpload = (rawFile: UploadRawFile) => {
+const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
   if (rawFile.type !== 'image/jpeg') {
     ElMessage.error('Avatar picture must be JPG format!');
     return false;
-  } else if (rawFile.size > 2097152) {
+  } else if (rawFile.size / 1024 / 1024 > 2) {
     ElMessage.error('Avatar picture size can not exceed 2MB!');
     return false;
   }
@@ -127,7 +128,7 @@ const beforeAvatarUpload = (rawFile: UploadRawFile) => {
       <el-form-item label="分类主图" prop="picture">
         <el-upload class="avatar-uploader" action="/api/admin/category/upload" :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
           <img v-if="imageUrl" :src="imageUrl" class="avatar" />
-          <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
+          <el-icon v-else class="avatar-uploader-icon"><i-ep-plus /></el-icon>
         </el-upload>
       </el-form-item>
 

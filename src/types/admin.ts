@@ -1,42 +1,11 @@
-// API 响应接口
-export interface ApiResponse<T> {
-  code: number;
-  msg: string;
-  data: T;
-}
-
-// 管理员登录请求参数
-export interface AdminLoginRequest {
-  username: string;
-  pass: string;
-}
-
-// 管理员登录响应数据
-export interface AdminLogin {
+// 管理员登录
+export interface Admin {
   id: number;
   username: string;
   avatar: string;
 }
 
-// 分类接口
-export interface Category {
-  id: number;
-  name: string;
-  picture: string;
-}
-
-export interface CategoryAdd {
-  name: string;
-  image: string;
-}
-
-export interface CategoryUpdate {
-  id: number;
-  name: string;
-  image: string;
-}
-
-// 商品接口
+// 商品
 export interface Goods {
   id: number;
   category_id: number;
@@ -48,4 +17,18 @@ export interface Goods {
   description: string;
   is_hot: number;
   is_recomented: number;
+}
+
+// 分类
+export interface Category {
+  id: number;
+  name: string;
+  picture: string;
+}
+
+// 用户
+export interface User {
+  id: number;
+  username: string;
+  avatar: string;
 }

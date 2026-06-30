@@ -1,35 +1,24 @@
-<script setup>
-import { inject, onBeforeMount, reactive, ref } from 'vue';
+<script setup lang="ts">
+import { onBeforeMount, reactive, ref } from 'vue';
 
-import { Delete, Download, Plus, ZoomIn } from '@element-plus/icons-vue';
-import { ElMessage } from 'element-plus';
+import { ElMessage, type FormInstance, type UploadData, type UploadFile, type UploadProps } from 'element-plus';
 
-const axios = inject('$axios');
-let dialogFormVisible = ref(false); // 默认弹窗隐藏
-let id = ref(0);
-//打开弹窗
-const openDialog = (ids) => {
-  id.value = ids;
-  dialogFormVisible.value = true;
+import { adminApi } from '../../api/admin';
+import type { User } from '../../types/admin';
 
-  if (id.value > 0) {
-    axios.get('/api/admin/admin/' + id.value).then((res) => {
-      if (res.status == 200) {
-        user.value = res.data.data;
-      }
-    });
-  }
-};
+const ruleFormRef = ref<FormInstance>();
+const dialogFormVisible = ref(false);
+const tableData = ref<User[]>([]);
+const id = ref(0);
+const pass = ref('');
+const salt = ref('');
 
-const ruleFormRef = ref();
-//存储单个用户的变量
-const user = ref({
+const user = ref<User>({
   id: 0,
-  username: '', //用户名称
-  password: '', //密码
-  salt: '' //密码盐
+  username: '',
+  avatar: ''
 });
-//表单验证规则
+
 const rules = reactive({
   username: [
     { required: true, message: '请填写用户名称', trigger: 'blur' },
@@ -41,83 +30,73 @@ const rules = reactive({
   ],
   salt: [{ required: true, message: '请填写密码盐', trigger: 'blur' }]
 });
-//表单提交
-const submitForm = async (formEl) => {
-  if (!formEl) return;
-  await formEl.validate((valid, fields) => {
-    if (valid) {
-      if (id.value > 0) {
-        axios.post('/api/admin/admin/update', user.value).then((res) => {
-          if (res.status == 200) {
-            ElMessage.success(res.data.msg);
-            dialogFormVisible.value = false;
-            getAdminList();
-            user.value = {
-              id: 0,
-              username: '',
-              password: '',
-              salt: ''
-            };
-          }
-        });
-      } else {
-        axios.post('/api/admin/admin/add', user.value).then((res) => {
-          if (res.status == 200) {
-            ElMessage.success(res.data.msg);
-            dialogFormVisible.value = false;
-            getAdminList();
-            user.value = {
-              id: 0,
-              username: '',
-              password: '',
-              salt: ''
-            };
-          }
-        });
-      }
-    } else {
-      console.log('验证失败!', fields);
-    }
-  });
+
+onBeforeMount(async () => {
+  const res = await adminApi.userList();
+  tableData.value = res;
+});
+
+const openDialog = async (ids?: number) => {
+  dialogFormVisible.value = true;
+  if (ids && ids > 0) {
+    id.value = ids;
+    const res = await adminApi.user(ids);
+    user.value = res;
+    imageUrl.value = '/api/' + res.avatar;
+  }
 };
 
-const resetForm = (formEl) => {
+const submitForm = async (formEl: FormInstance | undefined) => {
+  if (!formEl) return;
+  try {
+    await formEl.validate();
+    if (id.value > 0) {
+      adminApi.userUpdate({
+        id: user.value.id,
+        username: user.value.username,
+        avatar: user.value.avatar
+      });
+    } else {
+      adminApi.userAdd({
+        username: user.value.username,
+        avatar: user.value.avatar,
+        password: pass.value,
+        salt: salt.value
+      });
+    }
+  } catch (error) {
+    console.error('表单校验失败或请求出错:', error);
+  }
+};
+
+const deleteUser = async (ids: number) => {
+  adminApi.userDel(ids);
+};
+
+const resetForm = () => {
   dialogFormVisible.value = false;
   user.value = {
     id: 0,
     username: '',
-    password: '',
-    salt: ''
+    avatar: ''
   };
+  imageUrl.value = '';
 };
 
-//表格数据
-const tableData = ref([]);
-//挂载前读取
-onBeforeMount(() => {
-  getAdminList();
-});
-
-//请求读取数据
-const getAdminList = () => {
-  axios
-    .get('/api/admin/admin/list')
-    .then((res) => {
-      tableData.value = res.data.data;
-    })
-    .catch((e) => {
-      console.log(e);
-    });
+// 图片上传
+const imageUrl = ref('');
+const handleAvatarSuccess: UploadData['onSuccess'] = (_response: { data: { url: string } }, uploadFile: UploadFile) => {
+  imageUrl.value = URL.createObjectURL(uploadFile.raw!);
 };
-
-//删除用户
-const deleteAdmin = (ids) => {
-  axios.post('/api/admin/admin/delete', { id: ids }).then((res) => {
-    if (res.status == 200) {
-      ElMessage.success(res.data.msg);
-      getAdminList();
-    }
-  });
+const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
+  if (rawFile.type !== 'image/jpeg') {
+    ElMessage.error('Avatar picture must be JPG format!');
+    return false;
+  } else if (rawFile.size / 1024 / 1024 > 2) {
+    ElMessage.error('Avatar picture size can not exceed 2MB!');
+    return false;
+  }
+  return true;
 };
 </script>
 <template>
@@ -135,7 +114,7 @@ const deleteAdmin = (ids) => {
         <el-table-column prop="username" label="用户名称" width="180" />
         <el-table-column fixed="right" label="操作" min-width="120">
           <template #default="scope">
-            <el-button type="danger" size="small" @click="deleteAdmin(scope.row.id)">删除</el-button>
+            <el-button type="danger" size="small" @click="deleteUser(scope.row.id)">删除</el-button>
             <el-button type="primary" size="small" @click="openDialog(scope.row.id)">修改</el-button>
           </template>
         </el-table-column>
@@ -151,16 +130,23 @@ const deleteAdmin = (ids) => {
       </el-form-item>
 
       <el-form-item label="登录密码" prop="password">
-        <el-input v-model="user.password" type="password" />
+        <el-input v-model="pass" type="password" />
       </el-form-item>
 
       <el-form-item label="密码盐" prop="salt">
-        <el-input v-model="user.salt" />
+        <el-input v-model="salt" />
+      </el-form-item>
+
+      <el-form-item>
+        <el-upload class="avatar-uploader" action="/api/admin/user/upload" :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
+          <img v-if="imageUrl" :src="imageUrl" class="avatar" />
+          <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
+        </el-upload>
       </el-form-item>
 
       <el-form-item>
         <el-button type="primary" @click="submitForm(ruleFormRef)"> 确认 </el-button>
-        <el-button @click="resetForm(ruleFormRef)">取消</el-button>
+        <el-button @click="resetForm()">取消</el-button>
       </el-form-item>
     </el-form>
   </el-dialog>

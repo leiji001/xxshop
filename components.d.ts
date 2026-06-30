@@ -13,6 +13,7 @@ declare module 'vue' {
   export interface GlobalComponents {
     Backend: typeof import('./src/components/Backend.vue')['default']
     CategoryList: typeof import('./src/components/admin/CategoryList.vue')['default']
+    copy: typeof import('./src/components/admin/UserList copy.vue')['default']
     ElAside: typeof import('element-plus/es')['ElAside']
     ElBreadcrumb: typeof import('element-plus/es')['ElBreadcrumb']
     ElBreadcrumbItem: typeof import('element-plus/es')['ElBreadcrumbItem']
@@ -48,6 +49,7 @@ declare module 'vue' {
     IEpIconMenu: typeof import('~icons/ep/icon-menu')['default']
     IEpMenu: typeof import('~icons/ep/menu')['default']
     IEpMessage: typeof import('~icons/ep/message')['default']
+    IEpPlus: typeof import('~icons/ep/plus')['default']
     IEpSetting: typeof import('~icons/ep/setting')['default']
     IEpShop: typeof import('~icons/ep/shop')['default']
     IEpUser: typeof import('~icons/ep/user')['default']
