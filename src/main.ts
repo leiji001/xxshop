@@ -1,0 +1,72 @@
+import { createApp } from 'vue';
+
+import 'element-plus/dist/index.css';
+import { createPinia } from 'pinia';
+import piniaPluginPersistedstate from 'pinia-plugin-persistedstate';
+import { createRouter, createWebHashHistory } from 'vue-router';
+
+import App from './App.vue';
+import { useAdminStore } from './store/admin.ts';
+import './style.css';
+
+createApp(App)
+  .use(
+    createRouter({
+      history: createWebHashHistory(),
+      routes: [
+        {
+          path: '/',
+          redirect: '/login'
+        },
+        {
+          path: '/login',
+          name: 'login',
+          component: () => import('./components/Login.vue'),
+          beforeEnter: (_to, _form, next) => {
+            const islogin = useAdminStore().getIslogin;
+            if (islogin > 0) {
+              next('/admin');
+            }
+            next();
+          }
+        },
+        {
+          path: '/admin',
+          name: 'backend',
+          redirect: '/admin/index',
+          component: () => import('./components/Backend.vue'),
+          beforeEnter: (_to, _form, next) => {
+            const islogin = useAdminStore().getIslogin;
+            if (islogin < 1) {
+              next('/');
+            }
+            next();
+          },
+          children: [
+            {
+              path: 'index',
+              component: () => import('./components/admin/Index.vue')
+            },
+            {
+              path: 'goods/list',
+              component: () => import('./components/admin/GoodsList.vue')
+            },
+            {
+              path: 'category/list',
+              component: () => import('./components/admin/CategoryList.vue')
+            },
+            {
+              path: 'user/list',
+              component: () => import('./components/admin/UserList.vue')
+            },
+            {
+              path: 'user/info',
+              component: () => import('./components/admin/Info.vue')
+            }
+          ]
+        }
+      ]
+    })
+  )
+  .use(createPinia().use(piniaPluginPersistedstate))
+  .mount('#app');
