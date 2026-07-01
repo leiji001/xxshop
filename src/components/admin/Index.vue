@@ -9,12 +9,12 @@ const admin = useAdminStore().getLoginAdmin;
     <el-breadcrumb-item :to="{ path: '/admin/index' }">商城管理后台</el-breadcrumb-item>
     <el-breadcrumb-item>首页</el-breadcrumb-item>
   </el-breadcrumb>
-  <el-card style="width: 100%; margin-top: 20px">
+  <el-card>
     <el-row :gutter="20">
       <el-col :span="5">
-        <el-card style="width: 100%; height: 200px; min-width: 250px">
+        <el-card>
           <template #header>
-            <el-image style="width: 60px; height: 60px" :src="'/api/' + admin.avatar" />
+            <el-image :src="'/api/' + admin.avatar" />
             <span>{{ admin.username }}</span>
           </template>
           <p>登录时间：2026-10-10 15:36:12</p>
@@ -22,7 +22,7 @@ const admin = useAdminStore().getLoginAdmin;
         </el-card>
       </el-col>
       <el-col :span="19">
-        <el-card style="width: 100%; height: 200px">
+        <el-card>
           <template #header>
             <p>6月统计数据</p>
           </template>
@@ -43,12 +43,12 @@ const admin = useAdminStore().getLoginAdmin;
         </el-card>
       </el-col>
     </el-row>
-    <el-row :gutter="20" style="margin-top: 20px">
+    <el-row :gutter="20">
       <el-col :span="12">
-        <el-card style="width: 100%; height: 500px"> </el-card>
+        <el-card> </el-card>
       </el-col>
       <el-col :span="12">
-        <el-card style="width: 100%; height: 500px"> </el-card>
+        <el-card> </el-card>
       </el-col>
     </el-row>
   </el-card>

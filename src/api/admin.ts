@@ -155,8 +155,8 @@ export const adminApi = {
   },
 
   // 删除分类
-  categoryDel: (id: number): Promise<void> => {
-    return request.get<ApiResponse<void>>('/admin/category/' + id).then((res) => {
+  categoryDel: (body: { id: number }): Promise<void> => {
+    return request.post<ApiResponse<void>>('/admin/category/delete', body).then((res) => {
       if (res.code === 200) {
         ElMessage.success(res.msg);
       } else {

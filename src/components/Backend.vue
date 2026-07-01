@@ -22,18 +22,18 @@ const logout = () => {
 </script>
 
 <template>
-  <el-container class="layout-container-demo">
-    <el-header style="border-bottom: #ccc solid 1px">
-      <el-row justify="space-between" style="margin-top: 10px">
+  <el-container>
+    <el-header>
+      <el-row justify="space-between">
         <el-col :span="10">
           <h3>
-            <el-icon size="26"><i-ep-shop /></el-icon>微商城后台管理系统
+            <el-icon><i-ep-shop /></el-icon>微商城后台管理系统
           </h3>
         </el-col>
-        <el-col :span="6" style="display: flex; justify-content: flex-end">
-          <div class="toolbar">
+        <el-col :span="6">
+          <div>
             <el-dropdown>
-              <el-icon style="margin-right: 8px; margin-top: 1px">
+              <el-icon>
                 <i-ep-setting />
               </el-icon>
               <template #dropdown>
@@ -49,7 +49,7 @@ const logout = () => {
       </el-row>
     </el-header>
     <el-container>
-      <el-aside width="200px" style="border-right: 1px #ccc solid">
+      <el-aside width="200px">
         <el-scrollbar>
           <el-menu :default-active="$route.path" router>
             <el-menu-item index="/admin/index">
@@ -75,7 +75,7 @@ const logout = () => {
           </el-menu>
         </el-scrollbar>
       </el-aside>
-      <el-main style="padding: 20px">
+      <el-main>
         <RouterView />
       </el-main>
     </el-container>

@@ -6,12 +6,11 @@ import { useRouter } from 'vue-router';
 
 import { adminApi } from '../api/admin';
 import { useAdminStore } from '../store/admin';
-import type { AdminLoginRequest } from '../types/admin';
 
 const router = useRouter();
 const adminStore = useAdminStore();
 const ruleFormRef = ref<FormInstance>();
-const ruleForm = ref<AdminLoginRequest>({
+const ruleForm = ref({
   username: '',
   pass: ''
 });
@@ -68,9 +67,9 @@ const resetForm = (formEl: FormInstance | undefined) => {
 </script>
 
 <template>
-  <el-card style="max-width: 480px">
+  <el-card>
     <h3>"微商城"后台登录</h3>
-    <el-form ref="ruleFormRef" style="max-width: 600px" :model="ruleForm" status-icon :rules="rules" label-width="auto" class="demo-ruleForm">
+    <el-form ref="ruleFormRef" :model="ruleForm" status-icon :rules="rules" label-width="auto">
       <el-form-item label="登陆账号" prop="username">
         <el-input v-model="ruleForm.username" type="text" autocomplete="off" />
       </el-form-item>

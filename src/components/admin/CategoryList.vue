@@ -43,13 +43,13 @@ const submitForm = async (formEl: FormInstance | undefined) => {
   try {
     await formEl.validate();
     if (id.value > 0) {
-      adminApi.categoryUpdate({
+      await adminApi.categoryUpdate({
         id: category.value.id,
         name: category.value.name,
         picture: category.value.picture
       });
     } else {
-      adminApi.categoryAdd({
+      await adminApi.categoryAdd({
         name: category.value.name,
         picture: category.value.picture
       });
@@ -64,7 +64,8 @@ const submitForm = async (formEl: FormInstance | undefined) => {
 };
 
 const deltecategory = async (ids: number) => {
-  adminApi.categoryDel(ids);
+  await adminApi.categoryDel({ id: ids });
+  tableData.value = await adminApi.categoryList();
 };
 
 const resetForm = () => {
@@ -79,8 +80,9 @@ const resetForm = () => {
 
 // 图片上传
 const imageUrl = ref('');
-const handleAvatarSuccess: UploadData['onSuccess'] = (_response: { data: { url: string } }, uploadFile: UploadFile) => {
+const handleAvatarSuccess: UploadData['onSuccess'] = (response: { data: { url: string } }, uploadFile: UploadFile) => {
   imageUrl.value = URL.createObjectURL(uploadFile.raw!);
+  category.value.picture = response.data.url;
 };
 const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
   if (rawFile.type !== 'image/jpeg') {
@@ -99,15 +101,15 @@ const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
     <el-breadcrumb-item :to="{ path: '/admin/index' }">商城管理后台</el-breadcrumb-item>
     <el-breadcrumb-item>商品分类</el-breadcrumb-item>
   </el-breadcrumb>
-  <el-card style="width: 100%; margin-top: 20px">
+  <el-card>
     <el-button type="primary" @click="openDialog()">添加分类</el-button>
     <el-divider border-style="dotted" />
-    <el-table :data="tableData" border style="width: 100%">
-      <el-table-column prop="id" label="分类编号" width="180" />
-      <el-table-column prop="name" label="分类名称" width="180" />
-      <el-table-column fixed="right" label="图片">
+    <el-table :data="tableData" border>
+      <el-table-column prop="id" label="分类编号" />
+      <el-table-column prop="name" label="分类名称" />
+      <el-table-column label="图片">
         <template #default="scope">
-          <img :src="'/api/' + scope.row.picture" height="100px" />
+          <el-image :src="'/api/' + scope.row.picture" />
         </template>
       </el-table-column>
       <el-table-column fixed="right" label="操作" min-width="120">
@@ -120,15 +122,15 @@ const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
   </el-card>
 
   <el-dialog v-model="dialogFormVisible" :title="id ? '编辑分类' : '添加分类'" width="70%">
-    <el-form ref="ruleFormRef" style="max-width: 1000px" :model="category" :rules="rules" label-width="auto">
+    <el-form ref="ruleFormRef" :model="category" :rules="rules" label-width="auto">
       <el-form-item label="分类名称" prop="name">
         <el-input v-model="category.name" />
       </el-form-item>
 
       <el-form-item label="分类主图" prop="picture">
-        <el-upload class="avatar-uploader" action="/api/admin/category/upload" :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
-          <img v-if="imageUrl" :src="imageUrl" class="avatar" />
-          <el-icon v-else class="avatar-uploader-icon"><i-ep-plus /></el-icon>
+        <el-upload action="/api/admin/category/upload" :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
+          <img v-if="imageUrl" :src="imageUrl" />
+          <el-icon v-else><i-ep-plus /></el-icon>
         </el-upload>
       </el-form-item>
 

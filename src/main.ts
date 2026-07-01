@@ -7,7 +7,6 @@ import { createRouter, createWebHashHistory } from 'vue-router';
 
 import App from './App.vue';
 import { useAdminStore } from './store/admin.ts';
-import './style.css';
 
 createApp(App)
   .use(

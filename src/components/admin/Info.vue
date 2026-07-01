@@ -72,8 +72,8 @@ const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
     <el-breadcrumb-item :to="{ path: '/admin/index' }">商城管理后台</el-breadcrumb-item>
     <el-breadcrumb-item>信息设置</el-breadcrumb-item>
   </el-breadcrumb>
-  <el-card style="width: 100%; margin-top: 20px">
-    <el-form ref="ruleFormRef" :model="form" :rules="rules" label-width="auto" style="max-width: 600px">
+  <el-card>
+    <el-form ref="ruleFormRef" :model="form" :rules="rules" label-width="auto">
       <el-form-item label="登录账号" prop="username">
         <el-input v-model="form.username" />
       </el-form-item>
@@ -84,9 +84,9 @@ const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
         <el-input v-model="form.salt" />
       </el-form-item>
       <el-form-item label="用户头像">
-        <el-upload class="avatar-uploader" action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15" :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
-          <img v-if="imageUrl" :src="imageUrl" class="avatar" />
-          <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
+        <el-upload action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15" :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
+          <img v-if="imageUrl" :src="imageUrl" />
+          <el-icon v-else><Plus /></el-icon>
         </el-upload>
       </el-form-item>
       <el-form-item>

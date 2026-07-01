@@ -25,15 +25,14 @@ const rules = reactive({
     { min: 2, max: 80, message: '用户名称长度必须2-80位', trigger: 'blur' }
   ],
   password: [
-    { required: true, message: '请填写密码', trigger: 'blur' },
+    { required: false, message: '请填写密码', trigger: 'blur' },
     { min: 6, max: 32, message: '密码长度必须6-32位', trigger: 'blur' }
   ],
-  salt: [{ required: true, message: '请填写密码盐', trigger: 'blur' }]
+  salt: [{ required: false, message: '请填写密码盐', trigger: 'blur' }]
 });
 
 onBeforeMount(async () => {
-  const res = await adminApi.userList();
-  tableData.value = res;
+  tableData.value = await adminApi.userList();
 });
 
 const openDialog = async (ids?: number) => {
@@ -51,19 +50,21 @@ const submitForm = async (formEl: FormInstance | undefined) => {
   try {
     await formEl.validate();
     if (id.value > 0) {
-      adminApi.userUpdate({
+      await adminApi.userUpdate({
         id: user.value.id,
         username: user.value.username,
         avatar: user.value.avatar
       });
     } else {
-      adminApi.userAdd({
+      await adminApi.userAdd({
         username: user.value.username,
         avatar: user.value.avatar,
         password: pass.value,
         salt: salt.value
       });
     }
+    tableData.value = await adminApi.userList();
+    resetForm();
   } catch (error) {
     console.error('表单校验失败或请求出错:', error);
   }
@@ -85,8 +86,9 @@ const resetForm = () => {
 
 // 图片上传
 const imageUrl = ref('');
-const handleAvatarSuccess: UploadData['onSuccess'] = (_response: { data: { url: string } }, uploadFile: UploadFile) => {
+const handleAvatarSuccess: UploadData['onSuccess'] = (response: { data: { url: string } }, uploadFile: UploadFile) => {
   imageUrl.value = URL.createObjectURL(uploadFile.raw!);
+  user.value.avatar = response.data.url;
 };
 const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
   if (rawFile.type !== 'image/jpeg') {
@@ -106,13 +108,16 @@ const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
       <el-breadcrumb-item>用户管理</el-breadcrumb-item>
     </el-breadcrumb>
 
-    <el-card style="width: 100%; margin-top: 20px">
+    <el-card>
       <el-button type="primary" @click="openDialog()">添加用户</el-button>
       <el-divider border-style="dotted" />
-      <el-table :data="tableData" border style="width: 100%">
-        <el-table-column prop="id" label="用户编号" width="180" />
-        <el-table-column prop="username" label="用户名称" width="180" />
-        <el-table-column fixed="right" label="操作" min-width="120">
+      <el-table :data="tableData" border>
+        <el-table-column prop="id" label="用户编号" />
+        <el-table-column prop="username" label="用户名称" />
+        <el-table-column>
+          <template #default="scope"><el-image :src="'/api/' + scope.row.avatar" /></template>
+        </el-table-column>
+        <el-table-column fixed="right" label="操作">
           <template #default="scope">
             <el-button type="danger" size="small" @click="deleteUser(scope.row.id)">删除</el-button>
             <el-button type="primary" size="small" @click="openDialog(scope.row.id)">修改</el-button>
@@ -124,7 +129,7 @@ const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
 
   <!-- 添加、编辑用户弹窗 -->
   <el-dialog v-model="dialogFormVisible" :title="id ? '编辑用户' : '添加用户'" width="70%">
-    <el-form ref="ruleFormRef" style="max-width: 1000px" :model="user" :rules="rules" label-width="auto">
+    <el-form ref="ruleFormRef" :model="user" :rules="rules" label-width="auto">
       <el-form-item label="用户名称" prop="username">
         <el-input v-model="user.username" />
       </el-form-item>
@@ -137,23 +142,17 @@ const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
         <el-input v-model="salt" />
       </el-form-item>
 
-      <el-form-item>
-        <el-upload class="avatar-uploader" action="/api/admin/user/upload" :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
-          <img v-if="imageUrl" :src="imageUrl" class="avatar" />
-          <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
+      <el-form-item label="用户头像">
+        <el-upload action="/api/admin/user/upload" :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
+          <img v-if="imageUrl" :src="imageUrl" />
+          <el-icon v-else><i-ep-plus /></el-icon>
         </el-upload>
       </el-form-item>
 
       <el-form-item>
-        <el-button type="primary" @click="submitForm(ruleFormRef)"> 确认 </el-button>
+        <el-button type="primary" @click="submitForm(ruleFormRef)">确认</el-button>
         <el-button @click="resetForm()">取消</el-button>
       </el-form-item>
     </el-form>
   </el-dialog>
 </template>
-
-<style scoped>
-.el-button + .el-button {
-  margin-left: 8px;
-}
-</style>
