@@ -17,39 +17,35 @@ const logout = () => {
     username: '',
     avatar: ''
   });
-  router.push({ path: '/login' });
+  router.push({ path: '/loginadmin' });
 };
 </script>
 
 <template>
-  <el-container>
-    <el-header>
-      <el-row justify="space-between">
-        <el-col :span="10">
-          <h3>
-            <el-icon><i-ep-shop /></el-icon>微商城后台管理系统
-          </h3>
-        </el-col>
-        <el-col :span="6">
-          <div>
-            <el-dropdown>
-              <el-icon>
-                <i-ep-setting />
-              </el-icon>
-              <template #dropdown>
-                <el-dropdown-menu>
-                  <el-dropdown-item>修改密码</el-dropdown-item>
-                  <el-dropdown-item @click="logout()">退出系统</el-dropdown-item>
-                </el-dropdown-menu>
-              </template>
-            </el-dropdown>
-            <span>{{ username }}</span>
-          </div>
-        </el-col>
-      </el-row>
+  <el-container class="admin-layout">
+    <el-header class="admin-header" height="50px">
+      <div class="header-left">
+        <el-icon><i-ep-shop /></el-icon>微商城后台管理系统
+      </div>
+      <div class="header-right">
+        <el-dropdown>
+          <span class="admin-info">
+            {{ username }}
+            <el-icon>
+              <i-ep-setting />
+            </el-icon>
+          </span>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item>修改密码</el-dropdown-item>
+              <el-dropdown-item @click="logout()">退出系统</el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
+      </div>
     </el-header>
     <el-container>
-      <el-aside width="200px">
+      <el-aside class="admin-aside" width="180px">
         <el-scrollbar>
           <el-menu :default-active="$route.path" router>
             <el-menu-item index="/admin/index">
@@ -75,7 +71,7 @@ const logout = () => {
           </el-menu>
         </el-scrollbar>
       </el-aside>
-      <el-main>
+      <el-main class="admin-main">
         <RouterView />
       </el-main>
     </el-container>

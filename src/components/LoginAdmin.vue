@@ -59,27 +59,23 @@ const submitForm = async (formEl: FormInstance | undefined) => {
     console.error('表单校验失败或请求出错:', error);
   }
 };
-
-const resetForm = (formEl: FormInstance | undefined) => {
-  if (!formEl) return;
-  formEl.resetFields();
-};
 </script>
 
 <template>
-  <el-card>
-    <h3>"微商城"后台登录</h3>
-    <el-form ref="ruleFormRef" :model="ruleForm" status-icon :rules="rules" label-width="auto">
-      <el-form-item label="登陆账号" prop="username">
-        <el-input v-model="ruleForm.username" type="text" autocomplete="off" />
-      </el-form-item>
-      <el-form-item label="登陆密码" prop="pass">
-        <el-input v-model="ruleForm.pass" type="password" autocomplete="off" />
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="submitForm(ruleFormRef)">登陆</el-button>
-        <el-button @click="resetForm(ruleFormRef)">取消</el-button>
-      </el-form-item>
-    </el-form>
-  </el-card>
+  <div class="login-page">
+    <el-card class="login-card">
+      <h3>"微商城"后台登录</h3>
+      <el-form ref="ruleFormRef" :model="ruleForm" status-icon :rules="rules" label-width="auto">
+        <el-form-item label="账号" prop="username">
+          <el-input v-model="ruleForm.username" type="text" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="密码" prop="pass">
+          <el-input v-model="ruleForm.pass" type="password" autocomplete="off" />
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="submitForm(ruleFormRef)">登陆</el-button>
+        </el-form-item>
+      </el-form>
+    </el-card>
+  </div>
 </template>

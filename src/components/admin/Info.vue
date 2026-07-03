@@ -68,30 +68,32 @@ const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
 </script>
 
 <template>
-  <el-breadcrumb separator="/">
-    <el-breadcrumb-item :to="{ path: '/admin/index' }">商城管理后台</el-breadcrumb-item>
-    <el-breadcrumb-item>信息设置</el-breadcrumb-item>
-  </el-breadcrumb>
-  <el-card>
-    <el-form ref="ruleFormRef" :model="form" :rules="rules" label-width="auto">
-      <el-form-item label="登录账号" prop="username">
-        <el-input v-model="form.username" />
-      </el-form-item>
-      <el-form-item label="登录密码" prop="pass">
-        <el-input v-model="form.pass" type="password" show-password />
-      </el-form-item>
-      <el-form-item label="登录盐" prop="salt">
-        <el-input v-model="form.salt" />
-      </el-form-item>
-      <el-form-item label="用户头像">
-        <el-upload action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15" :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
-          <img v-if="imageUrl" :src="imageUrl" />
-          <el-icon v-else><Plus /></el-icon>
-        </el-upload>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="onSubmit(ruleFormRef)">保存</el-button>
-      </el-form-item>
-    </el-form>
-  </el-card>
+  <div class="page-container">
+    <el-breadcrumb separator="/">
+      <el-breadcrumb-item :to="{ path: '/admin/index' }">商城管理后台</el-breadcrumb-item>
+      <el-breadcrumb-item>信息设置</el-breadcrumb-item>
+    </el-breadcrumb>
+    <el-card>
+      <el-form ref="ruleFormRef" :model="form" :rules="rules" label-width="auto" style="max-width: 500px">
+        <el-form-item label="登录账号" prop="username">
+          <el-input v-model="form.username" />
+        </el-form-item>
+        <el-form-item label="登录密码" prop="pass">
+          <el-input v-model="form.pass" type="password" show-password />
+        </el-form-item>
+        <el-form-item label="登录盐" prop="salt">
+          <el-input v-model="form.salt" />
+        </el-form-item>
+        <el-form-item label="用户头像">
+          <el-upload action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15" :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
+            <img v-if="imageUrl" :src="imageUrl" />
+            <el-icon v-else class="avatar-uploader-icon"><i-ep-plus /></el-icon>
+          </el-upload>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="onSubmit(ruleFormRef)">保存</el-button>
+        </el-form-item>
+      </el-form>
+    </el-card>
+  </div>
 </template>

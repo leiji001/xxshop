@@ -38,7 +38,7 @@ const rules = reactive({
 });
 
 onBeforeMount(async () => {
-  adminApi.goodsList().then((res) => tableData.value = res);
+  adminApi.goodsList().then((res) => (tableData.value = res));
   categoryOptions.value = await adminApi.categoryList();
 });
 
@@ -130,7 +130,7 @@ const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
 </script>
 
 <template>
-  <div>
+  <div class="page-container">
     <el-breadcrumb separator="/">
       <el-breadcrumb-item :to="{ path: '/admin/index' }">商城管理后台</el-breadcrumb-item>
       <el-breadcrumb-item>商品管理</el-breadcrumb-item>
@@ -140,17 +140,19 @@ const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
       <el-button type="primary" @click="openDialog()">添加商品</el-button>
       <el-divider border-style="dotted" />
       <el-table :data="tableData" border>
-        <el-table-column prop="id" label="商品编号" />
-        <el-table-column label="商品分类">
-          <template #default="scope">{{categoryOptions.find((item) => item.id === scope.row.category_id)?.name
-            }}</template>
+        <el-table-column width="60" prop="id" label="编号" />
+        <el-table-column width="80" label="图片">
+          <template #default="scope"><el-image :src="'/api/' + scope.row.picture" /></template>
         </el-table-column>
-        <el-table-column prop="name" label="商品名称" />
-        <el-table-column prop="price" label="商品价格" />
-        <el-table-column prop="stock" label="商品库存" />
-        <el-table-column prop="spec" label="商品规格" />
-        <el-table-column prop="description" label="商品简介" />
-        <el-table-column label="热卖 / 推荐">
+        <el-table-column min-width="120" label="分类">
+          <template #default="scope">{{ categoryOptions.find((item) => item.id === scope.row.category_id)?.name }}</template>
+        </el-table-column>
+        <el-table-column min-width="120" prop="name" label="名称" />
+        <el-table-column min-width="120" prop="spec" label="规格" />
+        <el-table-column min-width="120" prop="description" label="简介" />
+        <el-table-column width="80" prop="price" label="价格" />
+        <el-table-column width="80" prop="stock" label="库存" />
+        <el-table-column width="100" label="热卖 / 推荐">
           <template #default="scope">
             <el-icon v-if="scope.row.is_hot > 0"><i-ep-CircleCheck /></el-icon>
             <el-icon v-else><i-ep-CircleClose /></el-icon>
@@ -159,10 +161,7 @@ const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
             <el-icon v-else><i-ep-CircleClose /></el-icon>
           </template>
         </el-table-column>
-        <el-table-column label="商品图片">
-          <template #default="scope"><el-image :src="'/api/' + scope.row.picture" /></template>
-        </el-table-column>
-        <el-table-column label="操作">
+        <el-table-column width="140" fixed="right" label="操作">
           <template #default="scope">
             <el-button type="danger" size="small" @click="deleteGoods(scope.row.id)">删除</el-button>
             <el-button type="primary" size="small" @click="openDialog(scope.row.id)">修改</el-button>
@@ -173,13 +172,13 @@ const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
   </div>
 
   <!-- 添加、编辑商品弹窗 -->
-  <el-dialog v-model="dialogFormVisible" :title="id ? '编辑商品' : '添加商品'" width="70%">
+  <el-dialog v-model="dialogFormVisible" :title="id ? '编辑商品' : '添加商品'" width="60%" class="form-dialog">
     <el-form ref="ruleFormRef" :model="goods" :rules="rules" label-width="auto">
       <el-form-item label="商品名称" prop="name">
         <el-input v-model="goods.name" />
       </el-form-item>
       <el-form-item label="商品分类" prop="category_id">
-        <el-select v-model="goods.category_id" placeholder="选择商品分类">
+        <el-select v-model="goods.category_id" placeholder="选择商品分类" style="width: 100%">
           <el-option v-for="item in categoryOptions" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
       </el-form-item>
@@ -190,23 +189,21 @@ const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
         <el-input-number v-model="goods.stock" :min="0" />
       </el-form-item>
       <el-form-item label="规格" prop="spec">
-        <el-input-number v-model="goods.spec" :min="0" />
+        <el-input v-model="goods.spec" :min="0" />
       </el-form-item>
       <el-form-item label="简介" prop="description">
-        <el-input v-model="goods.description" type="textarea" />
+        <el-input v-model="goods.description" type="textarea" :rows="3" />
       </el-form-item>
       <el-form-item label="热卖" prop="is_hot">
         <el-switch v-model="goods.is_hot" :active-value="1" :inactive-value="0" active-text="热卖" inactive-text="普通" />
       </el-form-item>
       <el-form-item label="推荐" prop="is_recomented">
-        <el-switch v-model="goods.is_recomented" :active-value="1" :inactive-value="0" active-text="推荐"
-          inactive-text="不推荐" />
+        <el-switch v-model="goods.is_recomented" :active-value="1" :inactive-value="0" active-text="推荐" inactive-text="不推荐" />
       </el-form-item>
       <el-form-item label="商品主图" prop="picture">
-        <el-upload action="/api/admin/goods/upload" :show-file-list="false" :on-success="handleAvatarSuccess"
-          :before-upload="beforeAvatarUpload">
+        <el-upload action="/api/admin/goods/upload" :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
           <img v-if="imageUrl" :src="imageUrl" />
-          <el-icon v-else><i-ep-plus /></el-icon>
+          <el-icon v-else class="avatar-uploader-icon"><i-ep-plus /></el-icon>
         </el-upload>
       </el-form-item>
       <el-form-item>
