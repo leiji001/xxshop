@@ -38,7 +38,7 @@ const rules = reactive({
 });
 
 onBeforeMount(async () => {
-  tableData.value = await adminApi.goodsList();
+  adminApi.goodsList().then((res) => tableData.value = res);
   categoryOptions.value = await adminApi.categoryList();
 });
 
@@ -142,7 +142,8 @@ const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
       <el-table :data="tableData" border>
         <el-table-column prop="id" label="商品编号" />
         <el-table-column label="商品分类">
-          <template #default="scope">{{ categoryOptions.find((item) => item.id === scope.row.category_id)?.name }}</template>
+          <template #default="scope">{{categoryOptions.find((item) => item.id === scope.row.category_id)?.name
+            }}</template>
         </el-table-column>
         <el-table-column prop="name" label="商品名称" />
         <el-table-column prop="price" label="商品价格" />
@@ -198,10 +199,12 @@ const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
         <el-switch v-model="goods.is_hot" :active-value="1" :inactive-value="0" active-text="热卖" inactive-text="普通" />
       </el-form-item>
       <el-form-item label="推荐" prop="is_recomented">
-        <el-switch v-model="goods.is_recomented" :active-value="1" :inactive-value="0" active-text="推荐" inactive-text="不推荐" />
+        <el-switch v-model="goods.is_recomented" :active-value="1" :inactive-value="0" active-text="推荐"
+          inactive-text="不推荐" />
       </el-form-item>
       <el-form-item label="商品主图" prop="picture">
-        <el-upload action="/api/admin/goods/upload" :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
+        <el-upload action="/api/admin/goods/upload" :show-file-list="false" :on-success="handleAvatarSuccess"
+          :before-upload="beforeAvatarUpload">
           <img v-if="imageUrl" :src="imageUrl" />
           <el-icon v-else><i-ep-plus /></el-icon>
         </el-upload>

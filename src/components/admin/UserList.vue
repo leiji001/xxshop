@@ -32,7 +32,7 @@ const rules = reactive({
 });
 
 onBeforeMount(async () => {
-  tableData.value = await adminApi.userList();
+  adminApi.userList().then((res) => tableData.value = res);
 });
 
 const openDialog = async (ids?: number) => {
@@ -143,7 +143,8 @@ const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
       </el-form-item>
 
       <el-form-item label="用户头像">
-        <el-upload action="/api/admin/user/upload" :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
+        <el-upload action="/api/admin/user/upload" :show-file-list="false" :on-success="handleAvatarSuccess"
+          :before-upload="beforeAvatarUpload">
           <img v-if="imageUrl" :src="imageUrl" />
           <el-icon v-else><i-ep-plus /></el-icon>
         </el-upload>

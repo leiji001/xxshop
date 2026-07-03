@@ -18,6 +18,7 @@ request.interceptors.response.use(
     return response.data;
   },
   (error) => {
+    ElMessage.error('无法连接至服务器，请检查网络连接。');
     return Promise.reject(error);
   }
 );
