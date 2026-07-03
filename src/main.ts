@@ -15,12 +15,12 @@ createApp(App)
       routes: [
         {
           path: '/',
-          redirect: '/login'
+          redirect: '/loginadmin'
         },
         {
-          path: '/login',
-          name: 'login',
-          component: () => import('./components/Login.vue'),
+          path: '/loginadmin',
+          name: 'loginadmin',
+          component: () => import('./components/LoginAdmin.vue'),
           beforeEnter: (_to, _form, next) => {
             const islogin = useAdminStore().getIslogin;
             if (islogin > 0) {
