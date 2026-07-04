@@ -45,7 +45,7 @@ const logout = () => {
       </div>
     </el-header>
     <el-container>
-      <el-aside class="admin-aside" width="180px">
+      <el-aside class="admin-aside" width="160px">
         <el-scrollbar>
           <el-menu :default-active="$route.path" router>
             <el-menu-item index="/admin/index">
@@ -77,3 +77,72 @@ const logout = () => {
     </el-container>
   </el-container>
 </template>
+
+<style scoped>
+/* ===== 新拟态导航栏 ===== */
+.admin-header {
+  background-color: var(--neu-bg);
+  box-shadow: var(--neu-shadow-out-sm);
+  border-bottom: none;
+  position: relative;
+  z-index: 10;
+}
+
+.header-left {
+  color: var(--neu-heading);
+}
+
+.header-left .el-icon {
+  color: var(--neu-accent);
+}
+
+.header-right .admin-info {
+  border-radius: var(--neu-radius-btn);
+  transition: all 0.25s ease;
+}
+
+.header-right .admin-info:hover {
+  box-shadow: var(--neu-shadow-in-sm);
+}
+
+/* ===== 新拟态侧边栏 ===== */
+.admin-aside {
+  background-color: var(--neu-bg);
+  box-shadow: var(--neu-shadow-out-sm);
+  position: relative;
+  z-index: 5;
+}
+
+.admin-aside .el-menu {
+  background-color: var(--neu-bg) !important;
+  border-right: none !important;
+}
+
+.admin-aside .el-menu-item {
+  border-radius: var(--neu-radius-btn);
+  margin: 2px 6px;
+  color: var(--neu-text) !important;
+  transition: all 0.2s ease;
+}
+
+.admin-aside .el-menu-item:hover {
+  box-shadow: var(--neu-shadow-out-sm) !important;
+  background-color: var(--neu-bg) !important;
+}
+
+.admin-aside .el-menu-item.is-active {
+  box-shadow: var(--neu-shadow-in-sm) !important;
+  color: var(--neu-accent) !important;
+  background-color: var(--neu-bg) !important;
+  font-weight: 600;
+}
+
+.admin-aside .el-menu-item.is-active .el-icon {
+  color: var(--neu-accent);
+}
+
+/* ===== 新拟态主内容区 ===== */
+.admin-main {
+  background-color: var(--neu-bg);
+}
+</style>

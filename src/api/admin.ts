@@ -30,7 +30,7 @@ export const adminApi = {
     });
   },
 
-  adminUpdate: (body: { id: number; username: string; password: string; salt: string; avatar: string }): Promise<Admin> => {
+  adminUpdate: (body: { id: number; username: string; password?: string; salt?: string; avatar: string }): Promise<Admin> => {
     return request.post<ApiResponse<Admin>>('/admin/admin/update', body).then((res) => {
       if (res.code === 200) {
         ElMessage.success(res.msg);

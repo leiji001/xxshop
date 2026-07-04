@@ -79,3 +79,28 @@ const submitForm = async (formEl: FormInstance | undefined) => {
     </el-card>
   </div>
 </template>
+
+<style scoped>
+.login-page {
+  background-color: var(--neu-bg);
+}
+
+.login-card {
+  background-color: var(--neu-bg);
+  box-shadow: var(--neu-shadow-out);
+  border: none !important;
+  border-radius: var(--neu-radius-card) !important;
+}
+
+.login-card :deep(.el-card__body) {
+  padding: var(--spacing-xl);
+}
+
+.login-card h3 {
+  color: var(--neu-heading);
+  font-weight: 600;
+  font-size: 20px;
+  margin-bottom: var(--spacing-lg);
+  text-align: center;
+}
+</style>

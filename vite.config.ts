@@ -2,7 +2,7 @@ import vue from '@vitejs/plugin-vue';
 import AutoImport from 'unplugin-auto-import/vite';
 import IconsResolver from 'unplugin-icons/resolver';
 import Icons from 'unplugin-icons/vite';
-import { ElementPlusResolver } from 'unplugin-vue-components/resolvers';
+import { ElementPlusResolver, VantResolver } from 'unplugin-vue-components/resolvers';
 import Components from 'unplugin-vue-components/vite';
 import { defineConfig } from 'vite';
 import vueDevTools from 'vite-plugin-vue-devtools';
@@ -14,6 +14,7 @@ export default defineConfig({
     vueDevTools(),
     AutoImport({
       resolvers: [
+        VantResolver(),
         ElementPlusResolver(),
         IconsResolver({
           prefix: 'Icon'
@@ -22,6 +23,7 @@ export default defineConfig({
     }),
     Components({
       resolvers: [
+        VantResolver(),
         ElementPlusResolver(),
         IconsResolver({
           enabledCollections: ['ep']

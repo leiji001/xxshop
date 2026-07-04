@@ -3,6 +3,7 @@ import { createApp } from 'vue';
 import 'element-plus/dist/index.css';
 import { createPinia } from 'pinia';
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate';
+import 'vant/lib/index.css';
 import { createRouter, createWebHashHistory } from 'vue-router';
 
 import App from './App.vue';
@@ -16,7 +17,7 @@ createApp(App)
       routes: [
         {
           path: '/',
-          redirect: '/loginadmin'
+          redirect: '/home'
         },
         {
           path: '/loginadmin',
@@ -62,6 +63,22 @@ createApp(App)
             {
               path: 'user/info',
               component: () => import('./components/admin/Info.vue')
+            }
+          ]
+        },
+        {
+          path: '/home',
+          name: 'home',
+          redirect: '/home/index',
+          component: () => import('./components/Home.vue'),
+          children: [
+            {
+              path: 'index',
+              component: () => import('./components/home/Index.vue')
+            },
+            {
+              path: 'goods',
+              component: () => import('./components/home/Goods.vue')
             }
           ]
         }

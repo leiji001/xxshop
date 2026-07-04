@@ -9,11 +9,11 @@ import type { Admin } from '../../types/admin';
 
 const ruleFormRef = ref<FormInstance>();
 const adminStore = useAdminStore();
-const form = ref<Admin & { pass: string; salt: string }>({
+const form = ref<Admin & { password?: string; salt?: string }>({
   id: 0,
   username: '',
   avatar: '',
-  pass: '',
+  password: '',
   salt: ''
 });
 
@@ -38,22 +38,31 @@ const onSubmit = async (formEl: FormInstance | undefined) => {
   if (!formEl) return;
   try {
     await formEl.validate();
-    adminApi.adminUpdate({
+    const body: { id: number; username: string; avatar: string; password?: string; salt?: string } = {
       id: form.value.id,
       username: form.value.username,
-      avatar: form.value.avatar,
-      password: form.value.pass,
-      salt: form.value.salt
+      avatar: form.value.avatar
+    };
+    if (form.value.password) {
+      body.password = form.value.password;
+    }
+    if (form.value.salt) {
+      body.salt = form.value.salt;
+    }
+    await adminApi.adminUpdate(body);
+    adminStore.updateLoginAdmin({
+      id: form.value.id,
+      username: form.value.username,
+      avatar: form.value.avatar
     });
-  } catch (error) {
-    console.error('表单校验失败或请求出错:', error);
-  }
+  } catch {}
 };
 
 // 图片上传
 const imageUrl = ref('');
-const handleAvatarSuccess: UploadData['onSuccess'] = (_response: { data: { url: string } }, uploadFile: UploadFile) => {
+const handleAvatarSuccess: UploadData['onSuccess'] = (response: { data: { url: string } }, uploadFile: UploadFile) => {
   imageUrl.value = URL.createObjectURL(uploadFile.raw!);
+  form.value.avatar = response.data.url;
 };
 const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
   if (rawFile.type !== 'image/jpeg') {
@@ -79,13 +88,13 @@ const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
           <el-input v-model="form.username" />
         </el-form-item>
         <el-form-item label="登录密码" prop="pass">
-          <el-input v-model="form.pass" type="password" show-password />
+          <el-input v-model="form.password" type="password" show-password />
         </el-form-item>
         <el-form-item label="登录盐" prop="salt">
           <el-input v-model="form.salt" />
         </el-form-item>
         <el-form-item label="用户头像">
-          <el-upload action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15" :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
+          <el-upload action="/api/admin/admin/upload" :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
             <img v-if="imageUrl" :src="imageUrl" />
             <el-icon v-else class="avatar-uploader-icon"><i-ep-plus /></el-icon>
           </el-upload>
@@ -97,3 +106,42 @@ const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
     </el-card>
   </div>
 </template>
+
+<style scoped>
+.page-container :deep(.el-card) {
+  background-color: var(--neu-bg);
+  border: none !important;
+  border-radius: var(--neu-radius-card) !important;
+  box-shadow: var(--neu-shadow-out);
+}
+
+.page-container :deep(.el-upload) {
+  background-color: var(--neu-bg) !important;
+  box-shadow: var(--neu-shadow-in) !important;
+  border: none !important;
+  border-radius: var(--neu-radius-sm) !important;
+}
+
+.page-container :deep(.el-upload:hover) {
+  box-shadow:
+    var(--neu-shadow-in),
+    0 0 0 1px rgba(124, 58, 237, 0.15) !important;
+}
+
+.page-container :deep(.avatar-uploader-icon) {
+  font-size: 28px;
+  color: var(--neu-text);
+  width: 100px;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.page-container :deep(img) {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: var(--neu-radius-sm);
+}
+</style>

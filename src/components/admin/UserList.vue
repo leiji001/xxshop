@@ -117,7 +117,7 @@ const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
           <template #default="scope"><el-image :src="'/api/' + scope.row.avatar" /></template>
         </el-table-column>
         <el-table-column prop="username" label="用户名称" />
-        <el-table-column width="140" fixed="right" label="操作">
+        <el-table-column width="160" fixed="right" label="操作">
           <template #default="scope">
             <el-button type="danger" size="small" @click="deleteUser(scope.row.id)">删除</el-button>
             <el-button type="primary" size="small" @click="openDialog(scope.row.id)">修改</el-button>
@@ -152,3 +152,42 @@ const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
     </el-form>
   </el-dialog>
 </template>
+
+<style scoped>
+.page-container :deep(.el-card) {
+  background-color: var(--neu-bg);
+  border: none !important;
+  border-radius: var(--neu-radius-card) !important;
+  box-shadow: var(--neu-shadow-out);
+}
+
+.form-dialog :deep(.el-upload) {
+  background-color: var(--neu-bg) !important;
+  box-shadow: var(--neu-shadow-in) !important;
+  border: none !important;
+  border-radius: var(--neu-radius-sm) !important;
+}
+
+.form-dialog :deep(.el-upload:hover) {
+  box-shadow:
+    var(--neu-shadow-in),
+    0 0 0 1px rgba(124, 58, 237, 0.15) !important;
+}
+
+.form-dialog :deep(.avatar-uploader-icon) {
+  font-size: 28px;
+  color: var(--neu-text);
+  width: 100px;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.form-dialog :deep(img) {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: var(--neu-radius-sm);
+}
+</style>
