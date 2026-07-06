@@ -79,6 +79,14 @@ createApp(App)
             {
               path: 'goods',
               component: () => import('./components/home/Goods.vue')
+            },
+            {
+              path: 'shopcar',
+              component: () => import('./components/home/Shopcar.vue')
+            },
+            {
+              path: 'uc',
+              component: () => import('./components/home/Uc.vue')
             }
           ]
         }

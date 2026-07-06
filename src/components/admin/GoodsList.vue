@@ -37,9 +37,9 @@ const rules = reactive({
   spec: [{ required: true, message: '填写规则', trigger: 'blur' }]
 });
 
-onBeforeMount(async () => {
+onBeforeMount(() => {
   adminApi.goodsList().then((res) => (tableData.value = res));
-  categoryOptions.value = await adminApi.categoryList();
+  adminApi.categoryList().then((res) => (categoryOptions.value = res));
 });
 
 const openDialog = async (ids?: number) => {
