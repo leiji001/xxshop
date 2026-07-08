@@ -1,7 +1,7 @@
 import request from '.';
 import type { Admin, Category, Goods, User } from '../types/admin';
 
-// API 响应接口
+// API 响应接口外层
 interface ApiResponse<T> {
   code: number;
   msg: string;

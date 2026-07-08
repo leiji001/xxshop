@@ -1,33 +1,24 @@
-// 管理员
-export interface Admin {
-  id: number;
-  username: string;
-  avatar: string;
-}
-
-// 商品
 export interface Goods {
   id: number;
   category_id: number;
   name: string;
-  price: number;
+  price: string;
   picture: string;
   stock: number;
   spec: string;
   description: string;
   is_hot: number;
   is_recomented: number;
+  category_name: string;
 }
 
-// 分类
 export interface Category {
   id: number;
   name: string;
   picture: string;
 }
 
-// 用户
-export interface User {
+export interface UserInfo {
   id: number;
   username: string;
   avatar: string;
