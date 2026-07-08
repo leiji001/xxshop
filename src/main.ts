@@ -10,7 +10,6 @@ import { createRouter, createWebHashHistory } from 'vue-router';
 import App from './App.vue';
 import { useAdminStore } from './store/admin.ts';
 import { useUserStore } from './store/user.ts';
-import './styles/index.scss';
 
 createApp(App)
   // 创建路由

@@ -18,6 +18,10 @@ const onLogOut = () => {
 </script>
 
 <template>
-  <van-nav-bar title="个人中心" />
-  <van-button @click="onLogOut()">退出登陆</van-button>
+  <div class="page-uc">
+    <van-nav-bar title="个人中心" />
+    <div class="uc-content">
+      <van-button class="logout-btn" @click="onLogOut()">退出登陆</van-button>
+    </div>
+  </div>
 </template>

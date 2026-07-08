@@ -52,13 +52,19 @@ const onDeleteSelected = () => {
     </div>
     <!-- 底部操作栏 -->
     <div v-if="cartStore.carlist.length > 0" class="cart-footer">
-      <van-checkbox :model-value="cartStore.isAllChecked" @click="cartStore.toggleAllChecked()"> 全选 </van-checkbox>
-      <div class="footer-total">
-        <span class="total-label">合计：</span>
-        <span class="total-price">￥{{ cartStore.totalPrice }}</span>
+      <div class="footer-left">
+        <van-checkbox :model-value="cartStore.isAllChecked" @click="cartStore.toggleAllChecked()"> 全选 </van-checkbox>
       </div>
-      <van-button type="danger" size="small" class="btn-delete" @click="onDeleteSelected"> 删除 </van-button>
-      <van-button type="primary" round size="small" class="btn-checkout"> 结算({{ cartStore.selectedCount }}) </van-button>
+      <div class="footer-center">
+        <div class="footer-total">
+          <span class="total-label">合计：</span>
+          <span class="total-price">￥{{ cartStore.totalPrice }}</span>
+        </div>
+      </div>
+      <div class="footer-right">
+        <van-button type="danger" size="small" class="btn-delete" @click="onDeleteSelected"> 删除 </van-button>
+        <van-button type="primary" round size="small" class="btn-checkout"> 结算({{ cartStore.selectedCount }}) </van-button>
+      </div>
     </div>
   </div>
 </template>

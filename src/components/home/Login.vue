@@ -25,14 +25,18 @@ const onLogin = async () => {
 </script>
 
 <template>
-  <van-nav-bar title="登陆" />
-  <h2>登陆</h2>
-  <van-form>
-    <van-cell-group inset>
-      <van-field v-model="ruleForm.username" label="用户名" placeholder="请输入用户名"></van-field>
-      <van-field v-model="ruleForm.password" label="密码" placeholder="请输入登录密码"></van-field>
-      <van-button color="#1989fa" @click="onLogin()">登陆</van-button>
-    </van-cell-group>
-  </van-form>
-  <p>还没有账号？<router-link to="/home/reg">立即注册</router-link></p>
+  <div class="page-login">
+    <van-nav-bar title="登陆" />
+    <div class="login-form-wrap">
+      <h3 class="login-title">登陆</h3>
+      <van-form>
+        <van-cell-group inset>
+          <van-field v-model="ruleForm.username" label="用户名" placeholder="请输入用户名"></van-field>
+          <van-field v-model="ruleForm.password" label="密码" placeholder="请输入登录密码"></van-field>
+          <van-button color="#1989fa" @click="onLogin()">登陆</van-button>
+        </van-cell-group>
+      </van-form>
+      <p class="login-footer">还没有账号？<router-link to="/home/reg">立即注册</router-link></p>
+    </div>
+  </div>
 </template>
