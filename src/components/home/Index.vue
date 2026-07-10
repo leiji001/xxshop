@@ -6,10 +6,12 @@ import { useRouter } from 'vue-router';
 
 import { homeApi } from '../../api/home';
 import { useCartStore } from '../../store/cart';
+import { useUserStore } from '../../store/user';
 import type { Category, Goods } from '../../types/home';
 
 const router = useRouter();
 const cartStore = useCartStore();
+const userStore = useUserStore();
 const goodsDataRecomented = ref<Goods[]>([]);
 const goodsDataHot = ref<Goods[]>([]);
 const goodsData = ref<Goods[]>([]);
@@ -29,18 +31,21 @@ const onSearch = () => {
   }
 };
 
-/** 加入购物车 */
 const addCart = (item: Goods) => {
-  cartStore.addCart({
-    id: item.id,
-    name: item.name,
-    picture: item.picture,
-    price: item.price,
-    nums: 1,
-    stock: item.stock,
-    checked: true
-  });
-  showToast('已加入购物车');
+  if (userStore.islogin > 0) {
+    cartStore.addCart({
+      id: item.id,
+      name: item.name,
+      picture: item.picture,
+      price: item.price,
+      nums: 1,
+      stock: item.stock,
+      checked: true
+    });
+    showToast('已加入购物车');
+  } else {
+    router.push('/home/login');
+  }
 };
 </script>
 
@@ -57,9 +62,9 @@ const addCart = (item: Goods) => {
         <van-image width="100%" height="240" :src="'/api/' + value.picture" />
       </van-swipe-item>
     </van-swipe>
-    <van-notice-bar left-icon="volume-o" text="无论我们能活多久，我们能够享受的只有无法分割的此刻，此外别无其他。" />
+    <van-notice-bar left-icon="volume-o" text="千元内普及2K高刷，爆款显示器限时特惠，满减叠享低至❌折！" />
     <van-grid>
-      <van-grid-item v-for="(value, index) in categoryData" :key="index" :text="value.name" :icon="'api' + value.picture" :to="{ path: '/home/goods' }"></van-grid-item>
+      <van-grid-item v-for="(value, index) in categoryData" :key="index" :text="value.name" :icon="'api' + value.picture" :to="{ path: '/home/goods', query: { category: value.id } }"></van-grid-item>
     </van-grid>
     <van-divider><van-icon name="star" />推荐</van-divider>
     <div class="section-goods-list">
@@ -72,7 +77,7 @@ const addCart = (item: Goods) => {
               <p class="goods-price">￥{{ value.price }}</p>
               <p class="goods-stock">可购{{ value.stock }}</p>
             </router-link>
-            <van-button color="#ee0a24" size="mini" @click="addCart(value)">加入购物车</van-button>
+            <van-button color="#1B4D3E" size="mini" @click="addCart(value)">加入购物车</van-button>
           </div>
         </van-col>
       </van-row>
@@ -88,10 +93,101 @@ const addCart = (item: Goods) => {
               <p class="goods-price">￥{{ value.price }}</p>
               <p class="goods-stock">可购{{ value.stock }}</p>
             </router-link>
-            <van-button color="#ee0a24" size="mini" @click="addCart(value)">加入购物车</van-button>
+            <van-button color="#1B4D3E" size="mini" @click="addCart(value)">加入购物车</van-button>
           </div>
         </van-col>
       </van-row>
     </div>
   </div>
 </template>
+
+<style scoped>
+.page-home {
+  background-color: #f7f8f6;
+  min-height: 100vh;
+}
+
+/* 轮播图区域 */
+.page-home :deep(.van-swipe) {
+  margin: 8px 12px;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* 分类图标区域 */
+.page-home :deep(.van-grid) {
+  background: transparent;
+  padding: 4px 0;
+}
+
+.page-home :deep(.van-grid-item__content) {
+  background: transparent;
+  padding: 12px 8px;
+}
+
+/* 商品卡片 */
+.section-goods-list {
+  padding: 0 10px;
+}
+
+.goods-card {
+  background: #ffffff;
+  border: 0.5px solid #e5e7e2;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+}
+
+.goods-card a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.goods-card :deep(.van-image) {
+  border-radius: 12px 12px 0 0;
+  overflow: hidden;
+}
+
+.goods-name {
+  margin: 8px 10px 4px;
+  font-size: 14px;
+  color: #333333;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.goods-price {
+  margin: 0 10px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #1b4d3e;
+}
+
+.goods-stock {
+  margin: 2px 10px 0;
+  font-size: 12px;
+  color: #8a8d87;
+}
+
+.goods-card .van-button {
+  margin: 6px 10px 0;
+  border-radius: 8px;
+}
+
+/* 通知栏 */
+.page-home :deep(.van-notice-bar) {
+  background: #e1f5ee;
+  color: #1b4d3e;
+  border-radius: 8px;
+  margin: 8px 12px;
+}
+
+/* 分割线 */
+.page-home :deep(.van-divider) {
+  margin: 16px 0 10px;
+  color: #1b4d3e;
+  border-color: #e5e7e2;
+}
+</style>

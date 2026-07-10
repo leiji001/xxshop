@@ -71,7 +71,8 @@ const submitForm = async (formEl: FormInstance | undefined) => {
 };
 
 const deleteUser = async (ids: number) => {
-  adminApi.userDel(ids);
+  await adminApi.userDel(ids);
+  tableData.value = await adminApi.userList();
 };
 
 const resetForm = () => {
@@ -103,14 +104,11 @@ const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
 </script>
 <template>
   <div class="page-container">
-    <el-breadcrumb separator="/">
-      <el-breadcrumb-item :to="{ path: '/admin/index' }">商城管理后台</el-breadcrumb-item>
-      <el-breadcrumb-item>用户管理</el-breadcrumb-item>
-    </el-breadcrumb>
+    <h2 class="page-title">用户管理</h2>
 
-    <el-card>
+    <div class="page-card">
       <el-button type="primary" @click="openDialog()">添加用户</el-button>
-      <el-divider border-style="dotted" />
+      <el-divider border-style="solid" />
       <el-table :data="tableData" border>
         <el-table-column width="60" prop="id" label="编号" />
         <el-table-column width="80" label="头像">
@@ -119,16 +117,16 @@ const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
         <el-table-column prop="username" label="用户名称" />
         <el-table-column width="160" fixed="right" label="操作">
           <template #default="scope">
-            <el-button type="danger" size="small" @click="deleteUser(scope.row.id)">删除</el-button>
+            <el-button size="small" @click="deleteUser(scope.row.id)">删除</el-button>
             <el-button type="primary" size="small" @click="openDialog(scope.row.id)">修改</el-button>
           </template>
         </el-table-column>
       </el-table>
-    </el-card>
+    </div>
   </div>
 
   <!-- 添加、编辑用户弹窗 -->
-  <el-dialog v-model="dialogFormVisible" :title="id ? '编辑用户' : '添加用户'" width="50%" class="form-dialog">
+  <el-dialog v-model="dialogFormVisible" :title="id ? '编辑用户' : '添加用户'" width="520px" class="form-dialog">
     <el-form ref="ruleFormRef" :model="user" :rules="rules" label-width="auto">
       <el-form-item label="用户名称" prop="username">
         <el-input v-model="user.username" />
@@ -154,40 +152,22 @@ const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
 </template>
 
 <style scoped>
-.page-container :deep(.el-card) {
-  background-color: var(--neu-bg);
-  border: none !important;
-  border-radius: var(--neu-radius-card) !important;
-  box-shadow: var(--neu-shadow-out);
+.page-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #111111;
+  margin: 0 0 24px 0;
+  letter-spacing: -0.02em;
 }
 
-.form-dialog :deep(.el-upload) {
-  background-color: var(--neu-bg) !important;
-  box-shadow: var(--neu-shadow-in) !important;
-  border: none !important;
-  border-radius: var(--neu-radius-sm) !important;
+.page-card {
+  background: #ffffff;
+  border: 1px solid #e5e5e5;
+  border-radius: 4px;
+  padding: 24px;
 }
 
-.form-dialog :deep(.el-upload:hover) {
-  box-shadow:
-    var(--neu-shadow-in),
-    0 0 0 1px rgba(124, 58, 237, 0.15) !important;
-}
-
-.form-dialog :deep(.avatar-uploader-icon) {
-  font-size: 28px;
-  color: var(--neu-text);
-  width: 100px;
-  height: 100px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.form-dialog :deep(img) {
-  width: 100px;
-  height: 100px;
-  object-fit: cover;
-  border-radius: var(--neu-radius-sm);
+.page-card .el-divider {
+  margin: 20px 0;
 }
 </style>

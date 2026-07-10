@@ -218,7 +218,7 @@ export const adminApi = {
 
   // 用户删除
   userDel: (id: number): Promise<void> => {
-    return request.get<ApiResponse<void>>('/admin/user/delete/' + id).then((res) => {
+    return request.post<ApiResponse<void>>('/admin/user/delete', { id }).then((res) => {
       if (res.code === 200) {
         ElMessage.success(res.msg);
       } else {

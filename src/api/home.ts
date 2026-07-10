@@ -18,7 +18,7 @@ interface PaginatedData<T> {
 
 export const homeApi = {
   // 商品列表
-  goodsList: (params?: { keyword: string }): Promise<Goods[]> => {
+  goodsList: (params?: { keyword?: string; category_id?: number }): Promise<Goods[]> => {
     return request.get<ApiResponse<PaginatedData<Goods>>>('/home/goods/list', { params }).then((res) => {
       if (res.code === 200) {
         return res.data.data;

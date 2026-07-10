@@ -22,127 +22,110 @@ const logout = () => {
 </script>
 
 <template>
-  <el-container class="admin-layout">
-    <el-header class="admin-header" height="50px">
-      <div class="header-left">
-        <el-icon><i-ep-shop /></el-icon>微商城后台管理系统
-      </div>
-      <div class="header-right">
-        <el-dropdown>
-          <span class="admin-info">
-            {{ username }}
-            <el-icon>
-              <i-ep-setting />
-            </el-icon>
-          </span>
-          <template #dropdown>
-            <el-dropdown-menu>
-              <el-dropdown-item>修改密码</el-dropdown-item>
-              <el-dropdown-item @click="logout()">退出系统</el-dropdown-item>
-            </el-dropdown-menu>
-          </template>
-        </el-dropdown>
-      </div>
-    </el-header>
-    <el-container>
-      <el-aside class="admin-aside" width="160px">
-        <el-scrollbar>
-          <el-menu :default-active="$route.path" router>
-            <el-menu-item index="/admin/index">
-              <el-icon><i-ep-message /></el-icon>
-              <span>首页</span>
-            </el-menu-item>
-            <el-menu-item index="/admin/category/list">
-              <el-icon><i-ep-menu /></el-icon>
-              <span>商品分类</span>
-            </el-menu-item>
-            <el-menu-item index="/admin/goods/list">
-              <el-icon><i-ep-goods /></el-icon>
-              <span>商品列表</span>
-            </el-menu-item>
-            <el-menu-item index="/admin/user/list">
-              <el-icon><i-ep-user /></el-icon>
-              <span>用户管理</span>
-            </el-menu-item>
-            <el-menu-item index="/admin/user/info">
-              <el-icon><i-ep-setting /></el-icon>
-              <span>信息设置</span>
-            </el-menu-item>
-          </el-menu>
-        </el-scrollbar>
-      </el-aside>
-      <el-main class="admin-main">
-        <RouterView />
-      </el-main>
+  <div class="admin-theme">
+    <el-container class="admin-layout">
+      <el-header class="admin-header" height="56px">
+        <div class="header-left">微商城后台</div>
+        <div class="header-right">
+          <el-dropdown>
+            <span class="admin-info">
+              {{ username }}
+            </span>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item>修改密码</el-dropdown-item>
+                <el-dropdown-item @click="logout()">退出系统</el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
+        </div>
+      </el-header>
+      <el-container>
+        <el-aside class="admin-aside" width="200px">
+          <el-scrollbar>
+            <el-menu :default-active="$route.path" router>
+              <el-menu-item index="/admin/index">
+                <span>首页</span>
+              </el-menu-item>
+              <el-menu-item index="/admin/category/list">
+                <span>商品分类</span>
+              </el-menu-item>
+              <el-menu-item index="/admin/goods/list">
+                <span>商品列表</span>
+              </el-menu-item>
+              <el-menu-item index="/admin/user/list">
+                <span>用户管理</span>
+              </el-menu-item>
+              <el-menu-item index="/admin/user/info">
+                <span>信息设置</span>
+              </el-menu-item>
+            </el-menu>
+          </el-scrollbar>
+        </el-aside>
+        <el-main class="admin-main">
+          <RouterView />
+        </el-main>
+      </el-container>
     </el-container>
-  </el-container>
+  </div>
 </template>
 
 <style scoped>
-/* ===== 新拟态导航栏 ===== */
 .admin-header {
-  background-color: var(--neu-bg);
-  box-shadow: var(--neu-shadow-out-sm);
-  border-bottom: none;
-  position: relative;
-  z-index: 10;
+  background: #ffffff;
+  border-bottom: 1px solid #e5e5e5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
 }
 
 .header-left {
-  color: var(--neu-heading);
-}
-
-.header-left .el-icon {
-  color: var(--neu-accent);
+  font-size: 16px;
+  font-weight: 600;
+  color: #111111;
+  letter-spacing: -0.01em;
 }
 
 .header-right .admin-info {
-  border-radius: var(--neu-radius-btn);
-  transition: all 0.25s ease;
+  font-size: 14px;
+  color: #555555;
+  cursor: pointer;
 }
 
-.header-right .admin-info:hover {
-  box-shadow: var(--neu-shadow-in-sm);
-}
-
-/* ===== 新拟态侧边栏 ===== */
 .admin-aside {
-  background-color: var(--neu-bg);
-  box-shadow: var(--neu-shadow-out-sm);
-  position: relative;
-  z-index: 5;
+  background: #fafaf9;
+  border-right: 1px solid #e5e5e5;
 }
 
 .admin-aside .el-menu {
-  background-color: var(--neu-bg) !important;
-  border-right: none !important;
+  border-right: none;
+  background: transparent;
+  padding: 12px 0;
 }
 
 .admin-aside .el-menu-item {
-  border-radius: var(--neu-radius-btn);
-  margin: 2px 6px;
-  color: var(--neu-text) !important;
-  transition: all 0.2s ease;
-}
-
-.admin-aside .el-menu-item:hover {
-  box-shadow: var(--neu-shadow-out-sm) !important;
-  background-color: var(--neu-bg) !important;
+  margin: 1px 8px;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #555555;
+  height: 40px;
+  line-height: 40px;
 }
 
 .admin-aside .el-menu-item.is-active {
-  box-shadow: var(--neu-shadow-in-sm) !important;
-  color: var(--neu-accent) !important;
-  background-color: var(--neu-bg) !important;
-  font-weight: 600;
+  background: #f0f0ef;
+  color: #111111;
+  font-weight: 500;
 }
 
-.admin-aside .el-menu-item.is-active .el-icon {
-  color: var(--neu-accent);
+.admin-aside .el-menu-item:hover {
+  background: #f0f0ef;
+  color: #111111;
 }
 
-/* ===== 新拟态主内容区 ===== */
 .admin-main {
-  background-color: var(--neu-bg);
+  background: #fafaf9;
+  padding: 32px;
 }
 </style>

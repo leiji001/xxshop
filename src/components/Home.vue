@@ -5,8 +5,10 @@ const userStore = useUserStore();
 </script>
 
 <template>
-  <div class="app-wrapper">
-    <RouterView />
+  <div class="app-wrapper home-theme">
+    <div class="home-content">
+      <RouterView />
+    </div>
     <van-tabbar route>
       <van-tabbar-item to="/home/index" name="index" icon="home-o">首页</van-tabbar-item>
       <van-tabbar-item to="/home/goods" name="goods" icon="shop-o">商品</van-tabbar-item>
@@ -16,3 +18,14 @@ const userStore = useUserStore();
     </van-tabbar>
   </div>
 </template>
+
+<style scoped>
+.home-content {
+  padding-bottom: 50px;
+}
+
+.app-wrapper :deep(.van-tabbar) {
+  border-top: 0.5px solid #e5e7e2;
+  box-shadow: none;
+}
+</style>

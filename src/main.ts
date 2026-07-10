@@ -8,6 +8,8 @@ import 'vant/lib/index.css';
 import { createRouter, createWebHashHistory } from 'vue-router';
 
 import App from './App.vue';
+import './assets/admin-theme.css';
+import './assets/style.css';
 import { useAdminStore } from './store/admin.ts';
 import { useUserStore } from './store/user.ts';
 

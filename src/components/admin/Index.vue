@@ -21,8 +21,8 @@ const categoryNumber = ref<number>(0);
 const pieOption = ref({});
 const barOption = ref({});
 
-// 统一主题色
-const themeColors = ['#7c3aed', '#a78bfa', '#c4b5fd', '#ddd6fe', '#ede9fe', '#f5f3ff', '#6d28d9', '#5b21b6'];
+// 统一主题色 — 黑白灰单色系
+const themeColors = ['#111111', '#333333', '#555555', '#777777', '#999999', '#bbbbbb', '#888888', '#666666'];
 
 function buildCharts(goods: Goods[], categories: Category[]) {
   // 构建分类 ID → 名称映射
@@ -61,11 +61,11 @@ function buildCharts(goods: Goods[], categories: Category[]) {
         radius: ['40%', '70%'],
         center: ['35%', '50%'],
         avoidLabelOverlap: true,
-        itemStyle: { borderRadius: 8, borderColor: '#e8e8e8', borderWidth: 3 },
+        itemStyle: { borderRadius: 4, borderColor: '#ffffff', borderWidth: 2 },
         label: { show: false },
         emphasis: {
           label: { show: true, fontSize: 16, fontWeight: 'bold' },
-          itemStyle: { shadowBlur: 10, shadowOffsetX: 0, shadowColor: 'rgba(0,0,0,0.15)' }
+          itemStyle: { shadowBlur: 6, shadowOffsetX: 0, shadowColor: 'rgba(0,0,0,0.08)' }
         },
         data: catIds.map((id, i) => ({
           name: catNames[i],
@@ -88,26 +88,26 @@ function buildCharts(goods: Goods[], categories: Category[]) {
       type: 'category',
       data: catNames,
       axisLabel: { color: '#666', fontSize: 12, rotate: catNames.length > 5 ? 30 : 0 },
-      axisLine: { lineStyle: { color: '#ccc' } }
+      axisLine: { lineStyle: { color: '#e5e5e5' } }
     },
     yAxis: {
       type: 'value',
       axisLabel: { color: '#666' },
-      splitLine: { lineStyle: { color: '#eee' } }
+      splitLine: { lineStyle: { color: '#f0f0ef' } }
     },
     series: [
       {
         name: '热销商品',
         type: 'bar',
         barWidth: '35%',
-        itemStyle: { color: '#7c3aed', borderRadius: [6, 6, 0, 0] },
+        itemStyle: { color: '#111111', borderRadius: [4, 4, 0, 0] },
         data: catIds.map((id) => categoryHotMap.get(id) || 0)
       },
       {
         name: '推荐商品',
         type: 'bar',
         barWidth: '35%',
-        itemStyle: { color: '#a78bfa', borderRadius: [6, 6, 0, 0] },
+        itemStyle: { color: '#777777', borderRadius: [4, 4, 0, 0] },
         data: catIds.map((id) => categoryRecomMap.get(id) || 0)
       }
     ]
@@ -128,151 +128,144 @@ onBeforeMount(async () => {
 
 <template>
   <div class="dashboard">
-    <el-breadcrumb separator="/">
-      <el-breadcrumb-item :to="{ path: '/admin/index' }">商城管理后台</el-breadcrumb-item>
-      <el-breadcrumb-item>首页</el-breadcrumb-item>
-    </el-breadcrumb>
-    <el-card>
-      <el-row :gutter="20">
-        <el-col :span="5">
-          <el-card class="user-card">
-            <template #header>
-              <el-avatar :src="'/api/' + admin.avatar" />
-              <span>{{ admin.username }}</span>
-            </template>
-            <p>登录时间：2026-10-10 15:36:12</p>
-            <p>登录地点：广西南宁</p>
-          </el-card>
-        </el-col>
-        <el-col :span="19">
-          <el-card class="stats-card">
-            <template #header>
-              <p class="text-bold">6月统计数据</p>
-            </template>
-            <el-row>
-              <el-col :span="8">
-                <div class="stats-item">
-                  <div class="stats-number">{{ goodsNumber }} 件</div>
-                  <div class="stats-label">商品数量</div>
-                </div>
-              </el-col>
-              <el-col :span="8">
-                <div class="stats-item">
-                  <div class="stats-number">{{ userNumber }} 位</div>
-                  <div class="stats-label">用户数量</div>
-                </div>
-              </el-col>
-              <el-col :span="8">
-                <div class="stats-item">
-                  <div class="stats-number">{{ categoryNumber }} 项</div>
-                  <div class="stats-label">分类数量</div>
-                </div>
-              </el-col>
-            </el-row>
-          </el-card>
-        </el-col>
-      </el-row>
-      <el-row :gutter="20" class="mt-md">
-        <el-col :span="12">
-          <el-card class="chart-card">
-            <template #header>
-              <p class="chart-title">商品分类占比</p>
-            </template>
-            <v-chart class="chart" :option="pieOption" autoresize />
-          </el-card>
-        </el-col>
-        <el-col :span="12">
-          <el-card class="chart-card">
-            <template #header>
-              <p class="chart-title">热销 & 推荐商品统计</p>
-            </template>
-            <v-chart class="chart" :option="barOption" autoresize />
-          </el-card>
-        </el-col>
-      </el-row>
-    </el-card>
+    <h2 class="dashboard-title">概览</h2>
+
+    <div class="stats-row">
+      <div class="profile-header">
+        <el-image class="profile-avatar" :src="'/api/' + admin.avatar" />
+        <div class="profile-info">
+          <p class="profile-name">{{ admin.username }}</p>
+          <p class="profile-label">管理员账号</p>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">{{ goodsNumber }}</div>
+        <div class="stat-label">商品数量</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">{{ userNumber }}</div>
+        <div class="stat-label">用户数量</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">{{ categoryNumber }}</div>
+        <div class="stat-label">分类数量</div>
+      </div>
+    </div>
+
+    <div class="charts-row">
+      <div class="chart-card">
+        <h3 class="chart-title">商品分类占比</h3>
+        <v-chart class="chart" :option="pieOption" autoresize />
+      </div>
+      <div class="chart-card">
+        <h3 class="chart-title">热销 &amp; 推荐商品</h3>
+        <v-chart class="chart" :option="barOption" autoresize />
+      </div>
+    </div>
   </div>
 </template>
+
 <style scoped>
-.dashboard :deep(.el-card) {
-  background-color: var(--neu-bg);
-  border: none !important;
-  border-radius: var(--neu-radius-card) !important;
-  box-shadow: var(--neu-shadow-out);
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
 }
 
-.dashboard .user-card :deep(.el-card__header) {
+.dashboard-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #111111;
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+.stats-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 24px;
+}
+
+/* 管理员信息卡片 */
+.profile-header {
+  background: #ffffff;
+  border: 1px solid #e5e5e5;
+  border-radius: 4px;
+  padding: 24px;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 16px;
+}
+
+.profile-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.profile-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.profile-name {
+  font-size: 16px;
   font-weight: 600;
-  color: var(--neu-heading);
-  border-bottom: none;
-  padding: var(--spacing-md) var(--spacing-lg);
+  color: #111111;
+  margin: 0;
+  line-height: 1.3;
 }
 
-.dashboard .user-card :deep(.el-avatar) {
-  box-shadow: var(--neu-shadow-out-sm);
-  background-color: var(--neu-bg);
-}
-
-.dashboard .user-card p {
-  color: var(--neu-text);
-  margin-bottom: 4px;
+.profile-label {
   font-size: 13px;
-}
-
-.dashboard .user-card p:last-child {
-  margin-bottom: 0;
-}
-
-.dashboard .stats-card :deep(.el-card__header) {
-  border-bottom: none;
-  padding: var(--spacing-md) var(--spacing-lg);
-}
-
-.dashboard .stats-card .text-bold {
-  color: var(--neu-heading);
-  font-weight: 600;
-  font-size: 15px;
-}
-
-.stats-item {
-  text-align: center;
-  padding: var(--spacing-md) 0;
-}
-
-.stats-number {
-  font-size: 28px;
-  font-weight: 600;
-  color: var(--neu-accent);
-  margin-bottom: 4px;
-}
-
-.stats-label {
-  font-size: 14px;
-  color: var(--neu-text);
-  font-weight: 400;
-}
-
-.chart-card {
-  min-height: 320px;
-}
-
-.chart-card :deep(.el-card__header) {
-  border-bottom: none;
-  padding: var(--spacing-md) var(--spacing-lg);
-}
-
-.chart-title {
-  color: var(--neu-heading);
-  font-weight: 600;
-  font-size: 15px;
+  color: #999999;
   margin: 0;
 }
 
+.stat-card {
+  background: #ffffff;
+  border: 1px solid #e5e5e5;
+  border-radius: 4px;
+  padding: 28px 32px;
+}
+
+.stat-number {
+  font-size: 48px;
+  font-weight: 600;
+  color: #111111;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+}
+
+.stat-label {
+  font-size: 14px;
+  color: #999999;
+  margin-top: 8px;
+}
+
+.charts-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.chart-card {
+  background: #ffffff;
+  border: 1px solid #e5e5e5;
+  border-radius: 4px;
+  padding: 28px 32px;
+}
+
+.chart-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #111111;
+  margin: 0 0 20px 0;
+}
+
 .chart {
-  width: 100%;
-  height: 260px;
+  height: 320px;
 }
 </style>

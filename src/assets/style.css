@@ -1,0 +1,81 @@
+/* ============================================
+   商城前台「清新简约风」主题
+   Vant4 CSS 变量覆盖 —— 作用域限定在 .home-theme
+   不影响后台 Element Plus 样式
+   ============================================ */
+
+.home-theme {
+  /* ---- 色板 ---- */
+  --van-primary-color: #1b4d3e;
+  --van-background: #f7f8f6;
+  --van-background-2: #f7f8f6;
+  --van-text-color: #333333;
+  --van-text-color-2: #8a8d87;
+  --van-border-color: #e5e7e2;
+  --van-active-color: #edefea;
+
+  /* ---- 按钮 ---- */
+  --van-button-primary-background: #1b4d3e;
+  --van-button-primary-border-color: #1b4d3e;
+  --van-button-default-color: #1b4d3e;
+  --van-button-default-border-color: #1b4d3e;
+
+  /* ---- Tabbar ---- */
+  --van-tabbar-item-active-color: #1b4d3e;
+  --van-tabbar-item-text-color: #8a8d87;
+  --van-tabbar-background: #ffffff;
+
+  /* ---- NavBar ---- */
+  --van-nav-bar-background: #ffffff;
+  --van-nav-bar-text-color: #1b4d3e;
+  --van-nav-bar-title-text-color: #1b4d3e;
+  --van-nav-bar-icon-color: #1b4d3e;
+
+  /* ---- Tag ---- */
+  --van-tag-primary-color: #1b4d3e;
+
+  /* ---- 圆角 ---- */
+  --van-radius-md: 10px;
+  --van-radius-lg: 12px;
+
+  /* ---- Search ---- */
+  --van-search-background: #f7f8f6;
+  --van-search-input-background: #ffffff;
+
+  /* ---- Cell ---- */
+  --van-cell-background: #ffffff;
+  --van-cell-font-size: 15px;
+  --van-cell-text-color: #333333;
+
+  /* ---- Divider ---- */
+  --van-divider-text-color: #1b4d3e;
+  --van-divider-border-color: #e5e7e2;
+
+  /* ---- Grid ---- */
+  --van-grid-item-text-color: #333333;
+
+  /* ---- Empty ---- */
+  --van-empty-color: #adb5a8;
+  --van-empty-description-color: #8a8d87;
+
+  /* ---- Checkbox ---- */
+  --van-checkbox-checked-icon-color: #1b4d3e;
+
+  /* ---- Stepper ---- */
+  --van-stepper-background: #f7f8f6;
+  --van-stepper-input-background: #ffffff;
+  --van-stepper-border-color: #e5e7e2;
+  --van-stepper-button-icon-color: #1b4d3e;
+
+  /* ---- Swipe indicator ---- */
+  --van-swipe-indicator: rgba(255, 255, 255, 0.7);
+  --van-swipe-indicator-active-color: #1b4d3e;
+
+  /* ---- NoticeBar ---- */
+  --van-notice-bar-background: #e1f5ee;
+  --van-notice-bar-text-color: #1b4d3e;
+
+  /* 全局页面背景 */
+  background-color: #f7f8f6;
+  min-height: 100vh;
+}

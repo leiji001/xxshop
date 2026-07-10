@@ -98,13 +98,11 @@ const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
 
 <template>
   <div class="page-container">
-    <el-breadcrumb separator="/">
-      <el-breadcrumb-item :to="{ path: '/admin/index' }">商城管理后台</el-breadcrumb-item>
-      <el-breadcrumb-item>商品分类</el-breadcrumb-item>
-    </el-breadcrumb>
-    <el-card>
+    <h2 class="page-title">商品分类</h2>
+
+    <div class="page-card">
       <el-button type="primary" @click="openDialog()">添加分类</el-button>
-      <el-divider border-style="dotted" />
+      <el-divider border-style="solid" />
       <el-table :data="tableData" border>
         <el-table-column width="60" prop="id" label="编号" />
         <el-table-column width="80" label="图片">
@@ -115,14 +113,14 @@ const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
         <el-table-column min-width="120" prop="name" label="名称" />
         <el-table-column width="160" fixed="right" label="操作">
           <template #default="scope">
-            <el-button type="danger" size="small" @click="deltecategory(scope.row.id)">删除</el-button>
+            <el-button size="small" @click="deltecategory(scope.row.id)">删除</el-button>
             <el-button type="primary" size="small" @click="openDialog(scope.row.id)">修改</el-button>
           </template>
         </el-table-column>
       </el-table>
-    </el-card>
+    </div>
 
-    <el-dialog v-model="dialogFormVisible" :title="id ? '编辑分类' : '添加分类'" width="50%" class="form-dialog">
+    <el-dialog v-model="dialogFormVisible" :title="id ? '编辑分类' : '添加分类'" width="520px" class="form-dialog">
       <el-form ref="ruleFormRef" :model="category" :rules="rules" label-width="auto">
         <el-form-item label="分类名称" prop="name">
           <el-input v-model="category.name" />
@@ -145,40 +143,22 @@ const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
 </template>
 
 <style scoped>
-.page-container :deep(.el-card) {
-  background-color: var(--neu-bg);
-  border: none !important;
-  border-radius: var(--neu-radius-card) !important;
-  box-shadow: var(--neu-shadow-out);
+.page-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #111111;
+  margin: 0 0 24px 0;
+  letter-spacing: -0.02em;
 }
 
-.form-dialog :deep(.el-upload) {
-  background-color: var(--neu-bg) !important;
-  box-shadow: var(--neu-shadow-in) !important;
-  border: none !important;
-  border-radius: var(--neu-radius-sm) !important;
+.page-card {
+  background: #ffffff;
+  border: 1px solid #e5e5e5;
+  border-radius: 4px;
+  padding: 24px;
 }
 
-.form-dialog :deep(.el-upload:hover) {
-  box-shadow:
-    var(--neu-shadow-in),
-    0 0 0 1px rgba(124, 58, 237, 0.15) !important;
-}
-
-.form-dialog :deep(.avatar-uploader-icon) {
-  font-size: 28px;
-  color: var(--neu-text);
-  width: 100px;
-  height: 100px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.form-dialog :deep(img) {
-  width: 100px;
-  height: 100px;
-  object-fit: cover;
-  border-radius: var(--neu-radius-sm);
+.page-card .el-divider {
+  margin: 20px 0;
 }
 </style>

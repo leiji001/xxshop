@@ -2,6 +2,7 @@
 import { onBeforeMount, reactive, ref } from 'vue';
 
 import type { FormInstance, UploadData, UploadFile, UploadProps } from 'element-plus';
+import { ElMessage } from 'element-plus';
 
 import { adminApi } from '../../api/admin';
 import { useAdminStore } from '../../store/admin';
@@ -78,12 +79,10 @@ const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
 
 <template>
   <div class="page-container">
-    <el-breadcrumb separator="/">
-      <el-breadcrumb-item :to="{ path: '/admin/index' }">商城管理后台</el-breadcrumb-item>
-      <el-breadcrumb-item>信息设置</el-breadcrumb-item>
-    </el-breadcrumb>
-    <el-card>
-      <el-form ref="ruleFormRef" :model="form" :rules="rules" label-width="auto" style="max-width: 500px">
+    <h2 class="page-title">信息设置</h2>
+
+    <div class="page-card">
+      <el-form ref="ruleFormRef" :model="form" :rules="rules" label-width="auto" style="max-width: 460px">
         <el-form-item label="登录账号" prop="username">
           <el-input v-model="form.username" />
         </el-form-item>
@@ -103,45 +102,23 @@ const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
           <el-button type="primary" @click="onSubmit(ruleFormRef)">保存</el-button>
         </el-form-item>
       </el-form>
-    </el-card>
+    </div>
   </div>
 </template>
 
 <style scoped>
-.page-container :deep(.el-card) {
-  background-color: var(--neu-bg);
-  border: none !important;
-  border-radius: var(--neu-radius-card) !important;
-  box-shadow: var(--neu-shadow-out);
+.page-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #111111;
+  margin: 0 0 24px 0;
+  letter-spacing: -0.02em;
 }
 
-.page-container :deep(.el-upload) {
-  background-color: var(--neu-bg) !important;
-  box-shadow: var(--neu-shadow-in) !important;
-  border: none !important;
-  border-radius: var(--neu-radius-sm) !important;
-}
-
-.page-container :deep(.el-upload:hover) {
-  box-shadow:
-    var(--neu-shadow-in),
-    0 0 0 1px rgba(124, 58, 237, 0.15) !important;
-}
-
-.page-container :deep(.avatar-uploader-icon) {
-  font-size: 28px;
-  color: var(--neu-text);
-  width: 100px;
-  height: 100px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.page-container :deep(img) {
-  width: 100px;
-  height: 100px;
-  object-fit: cover;
-  border-radius: var(--neu-radius-sm);
+.page-card {
+  background: #ffffff;
+  border: 1px solid #e5e5e5;
+  border-radius: 4px;
+  padding: 28px 32px;
 }
 </style>

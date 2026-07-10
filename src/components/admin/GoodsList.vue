@@ -131,14 +131,11 @@ const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
 
 <template>
   <div class="page-container">
-    <el-breadcrumb separator="/">
-      <el-breadcrumb-item :to="{ path: '/admin/index' }">商城管理后台</el-breadcrumb-item>
-      <el-breadcrumb-item>商品管理</el-breadcrumb-item>
-    </el-breadcrumb>
+    <h2 class="page-title">商品列表</h2>
 
-    <el-card>
+    <div class="page-card">
       <el-button type="primary" @click="openDialog()">添加商品</el-button>
-      <el-divider border-style="dotted" />
+      <el-divider border-style="solid" />
       <el-table :data="tableData" border>
         <el-table-column width="60" prop="id" label="编号" />
         <el-table-column width="80" label="图片">
@@ -154,25 +151,25 @@ const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
         <el-table-column width="80" prop="stock" label="库存" />
         <el-table-column width="100" label="热卖 / 推荐">
           <template #default="scope">
-            <el-icon v-if="scope.row.is_hot > 0"><i-ep-CircleCheck /></el-icon>
-            <el-icon v-else><i-ep-CircleClose /></el-icon>
+            <span v-if="scope.row.is_hot > 0" class="tag-yes">是</span>
+            <span v-else class="tag-no">否</span>
             /
-            <el-icon v-if="scope.row.is_recomented > 0"><i-ep-CircleCheck /></el-icon>
-            <el-icon v-else><i-ep-CircleClose /></el-icon>
+            <span v-if="scope.row.is_recomented > 0" class="tag-yes">是</span>
+            <span v-else class="tag-no">否</span>
           </template>
         </el-table-column>
         <el-table-column width="160" fixed="right" label="操作">
           <template #default="scope">
-            <el-button type="danger" size="small" @click="deleteGoods(scope.row.id)">删除</el-button>
+            <el-button size="small" @click="deleteGoods(scope.row.id)">删除</el-button>
             <el-button type="primary" size="small" @click="openDialog(scope.row.id)">修改</el-button>
           </template>
         </el-table-column>
       </el-table>
-    </el-card>
+    </div>
   </div>
 
   <!-- 添加、编辑商品弹窗 -->
-  <el-dialog v-model="dialogFormVisible" :title="id ? '编辑商品' : '添加商品'" width="60%" class="form-dialog">
+  <el-dialog v-model="dialogFormVisible" :title="id ? '编辑商品' : '添加商品'" width="640px" class="form-dialog">
     <el-form ref="ruleFormRef" :model="goods" :rules="rules" label-width="auto">
       <el-form-item label="商品名称" prop="name">
         <el-input v-model="goods.name" />
@@ -207,7 +204,7 @@ const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
         </el-upload>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="submitForm(ruleFormRef)"> 确认 </el-button>
+        <el-button type="primary" @click="submitForm(ruleFormRef)">确认</el-button>
         <el-button @click="resetForm()">取消</el-button>
       </el-form-item>
     </el-form>
@@ -215,40 +212,31 @@ const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
 </template>
 
 <style scoped>
-.page-container :deep(.el-card) {
-  background-color: var(--neu-bg);
-  border: none !important;
-  border-radius: var(--neu-radius-card) !important;
-  box-shadow: var(--neu-shadow-out);
+.page-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #111111;
+  margin: 0 0 24px 0;
+  letter-spacing: -0.02em;
 }
 
-.form-dialog :deep(.el-upload) {
-  background-color: var(--neu-bg) !important;
-  box-shadow: var(--neu-shadow-in) !important;
-  border: none !important;
-  border-radius: var(--neu-radius-sm) !important;
+.page-card {
+  background: #ffffff;
+  border: 1px solid #e5e5e5;
+  border-radius: 4px;
+  padding: 24px;
 }
 
-.form-dialog :deep(.el-upload:hover) {
-  box-shadow:
-    var(--neu-shadow-in),
-    0 0 0 1px rgba(124, 58, 237, 0.15) !important;
+.page-card .el-divider {
+  margin: 20px 0;
 }
 
-.form-dialog :deep(.avatar-uploader-icon) {
-  font-size: 28px;
-  color: var(--neu-text);
-  width: 100px;
-  height: 100px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.tag-yes {
+  color: #111111;
+  font-weight: 500;
 }
 
-.form-dialog :deep(img) {
-  width: 100px;
-  height: 100px;
-  object-fit: cover;
-  border-radius: var(--neu-radius-sm);
+.tag-no {
+  color: #cccccc;
 }
 </style>
